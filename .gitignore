@@ -4,3 +4,4 @@ gvars/
 libcvd/
 CHANGELOG
 *~
+*.o
