@@ -4,11 +4,11 @@
 # Edit the lines below to point to any needed include and link paths
 # Or to change the compiler's optimization flags
 CC = g++
-COMPILEFLAGS = -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -pthread -I/usr/include/gstreamer-0.10 -I/usr/include/libxml2  -D_LINUX -D_REENTRANT -Wall  -O3 -march=nocona -msse3
-LINKFLAGS = -L -lGVars3 -lcvd -lglib-2.0 -pthread -lgstreamer-0.10 -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lxml2
+COMPILEFLAGS = -I MY_CUSTOM_INCLUDE_PATH -D_LINUX -D_REENTRANT -Wall  -O3 -march=nocona -msse3
+LINKFLAGS = -L MY_CUSTOM_LINK_PATH -lGVars3 -lcvd
 
 # Edit this line to change video source
-VIDEOSOURCE = VideoSource_Linux_Gstreamer_File.cc
+VIDEOSOURCE = VideoSource_Linux_DV.o
 
 OBJECTS=	main.o\
 		GLWindow2.o\
