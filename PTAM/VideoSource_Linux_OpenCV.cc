@@ -38,9 +38,7 @@ VideoSource::VideoSource()
 {
   cout << "  VideoSource_Linux: Opening video source..." << endl;
 
-  mptr = new VideoCapture("ross_paper.avi");
-  //mptr = new VideoCapture("iphone_cvlab.m4v");
-  //mptr = new VideoCapture("seda_simplepaper.mp4");
+  mptr = new VideoCapture("iphone_cvlab.m4v");
 
  VideoCapture* cap = (VideoCapture*)mptr;
   if(!cap->isOpened()){
