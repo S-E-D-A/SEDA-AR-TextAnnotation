@@ -21,9 +21,14 @@
 #include <cvd/colourspace_convert.h>
 #include <cvd/colourspaces.h>
 #include <gvars3/instances.h>
-#include <opencv/highgui.h>
-#include <opencv/cxcore.h>
-#include <opencv/cv.h>
+// #include <opencv/highgui.h>
+// #include <opencv/cxcore.h>
+// #include <opencv/cv.h>
+
+#include <core/core.hpp>
+#include <highgui/highgui.hpp>
+#include <imgproc/imgproc.hpp>
+
 
 using namespace CVD;
 using namespace std;
@@ -36,13 +41,23 @@ using namespace cv;
 VideoSource::VideoSource()
 {
   cout << "  VideoSource_Linux: Opening video source..." << endl;
-  mptr = new VideoCapture(0);
+  //mptr = new VideoCapture(0);
+  //mptr = new VideoCapture("ross_paper.avi");
+  mptr = new VideoCapture("iphone_cvlab.m4v");
+  
   VideoCapture* cap = (VideoCapture*)mptr;
   if(!cap->isOpened()){
     cerr << "Unable to get the camera" << endl;
     exit(-1);
   }
   cout << "  ... got video source." << endl;
+
+  Mat frame;
+  namedWindow("testim",1);
+  *cap >> frame;
+  imshow("testim",frame);
+  waitKey();
+
   mirSize = ImageRef(OPENCV_VIDEO_W, OPENCV_VIDEO_H);
 };
 
