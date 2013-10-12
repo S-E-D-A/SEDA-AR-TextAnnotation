@@ -38,7 +38,7 @@ VideoSource::VideoSource()
 {
   cout << "  VideoSource_Linux: Opening video source..." << endl;
 
-  mptr = new VideoCapture("iphone_cvlab.m4v");
+  mptr = new VideoCapture("iphone_001.m4v");
 
  VideoCapture* cap = (VideoCapture*)mptr;
   if(!cap->isOpened()){
