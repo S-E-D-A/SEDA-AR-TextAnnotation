@@ -21,10 +21,6 @@
 #include <cvd/colourspace_convert.h>
 #include <cvd/colourspaces.h>
 #include <gvars3/instances.h>
-// #include <opencv/highgui.h>
-// #include <opencv/cxcore.h>
-// #include <opencv/cv.h>
-
 #include <core/core.hpp>
 #include <highgui/highgui.hpp>
 #include <imgproc/imgproc.hpp>
@@ -36,27 +32,23 @@ using namespace GVars3;
 using namespace cv;
 
 #define OPENCV_VIDEO_W 640
-#define OPENCV_VIDEO_H 480
+#define OPENCV_VIDEO_H 360
 
 VideoSource::VideoSource()
 {
   cout << "  VideoSource_Linux: Opening video source..." << endl;
-  //mptr = new VideoCapture(0);
-  //mptr = new VideoCapture("ross_paper.avi");
-  mptr = new VideoCapture("iphone_cvlab.m4v");
-  
-  VideoCapture* cap = (VideoCapture*)mptr;
+
+  mptr = new VideoCapture("ross_paper.avi");
+  //mptr = new VideoCapture("iphone_cvlab.m4v");
+  //mptr = new VideoCapture("seda_simplepaper.mp4");
+
+ VideoCapture* cap = (VideoCapture*)mptr;
   if(!cap->isOpened()){
     cerr << "Unable to get the camera" << endl;
     exit(-1);
   }
   cout << "  ... got video source." << endl;
-
-  Mat frame;
-  namedWindow("testim",1);
-  *cap >> frame;
-  imshow("testim",frame);
-  waitKey();
+  cout << "width is: " << cap->get(3) << " height is: " << cap->get(4) << endl;
 
   mirSize = ImageRef(OPENCV_VIDEO_W, OPENCV_VIDEO_H);
 };
