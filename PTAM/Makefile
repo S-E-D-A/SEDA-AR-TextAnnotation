@@ -4,8 +4,8 @@
 # Edit the lines below to point to any needed include and link paths
 # Or to change the compiler's optimization flags
 CC = g++
-COMPILEFLAGS = -I /home/vagrant/PTAM -D_LINUX -D_REENTRANT -Wall  -O3 -march=nocona -msse3
-LINKFLAGS = -L /usr/local/lib -lGVars3 -lcvd -llapack -lopencv_core -lopencv_highgui -lopencv_imgproc 
+COMPILEFLAGS = -g -O3 -I /home/vagrant/PTAM -I /usr/local/include/opencv2 -D_LINUX -D_REENTRANT -Wall -march=nocona -msse3
+LINKFLAGS = -g -L /usr/local/lib -lGVars3 -lcvd -llapack -lopencv_core -lopencv_highgui -lopencv_imgproc 
 
 # Edit this line to change video source
 VIDEOSOURCE = VideoSource_Linux_OpenCV.o
