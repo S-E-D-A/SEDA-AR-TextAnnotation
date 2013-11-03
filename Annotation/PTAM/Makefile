@@ -5,7 +5,7 @@
 # Or to change the compiler's optimization flags
 CC = g++
 COMPILEFLAGS = -g -O3 -D_LINUX -D_REENTRANT -Wall -march=nocona -msse3
-LINKFLAGS = -g -L /usr/local/lib -lGVars3 -lcvd -llapack 
+LINKFLAGS = -g -L /usr/local/lib -lGVars3 -lcvd -llapack -lblas
 
 # Edit this line to change video source
 VIDEOSOURCE = VideoSource_Linux_File.o
