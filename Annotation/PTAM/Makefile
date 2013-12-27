@@ -5,10 +5,10 @@
 # Or to change the compiler's optimization flags
 CC = g++
 COMPILEFLAGS = -g -O3 -D_LINUX -D_REENTRANT -Wall -march=nocona -msse3
-LINKFLAGS = -g -L /usr/local/lib -lGVars3 -lcvd -llapack -lblas
+LINKFLAGS = -g -L /usr/local/lib -lGVars3 -lcvd -llapack -lblas -lopencv_core -lopencv_highgui -lopencv_imgproc
 
 # Edit this line to change video source
-VIDEOSOURCE = VideoSource_Linux_File.o
+VIDEOSOURCE = VideoSource_Linux_OpenCV.o
 
 OBJECTS=	main.o\
 		GLWindow2.o\
