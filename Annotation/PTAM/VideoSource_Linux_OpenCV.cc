@@ -31,14 +31,14 @@ using namespace GVars3;
 using namespace cv;
 
 #define OPENCV_VIDEO_W 640
-#define OPENCV_VIDEO_H 360
+#define OPENCV_VIDEO_H 480
 
 VideoSource::VideoSource()
 {
   cout << "  VideoSource_Linux: Opening video source..." << endl;
 
-  mptr = new VideoCapture("iphone_001.m4v");
-  //mptr = new VideoCapture(0);
+  //mptr = new VideoCapture("iphone_001.m4v");
+  mptr = new VideoCapture(0);
 
   VideoCapture* cap = (VideoCapture*)mptr;
   if(!cap->isOpened()){
