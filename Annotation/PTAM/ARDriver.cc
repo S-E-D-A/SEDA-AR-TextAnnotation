@@ -91,8 +91,6 @@ void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
   mGLWindow.SetupVideoRasterPosAndZoom();
 }
 
-
-
 void ARDriver::MakeFrameBuffer()
 {
   // Needs nvidia drivers >= 97.46
