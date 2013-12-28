@@ -31,26 +31,28 @@ using namespace GVars3;
 using namespace cv;
 
 #define OPENCV_VIDEO_W 640
-#define OPENCV_VIDEO_H 480
+#define OPENCV_VIDEO_H 360
+
+void VideoSource::ResetVideo()
+{
+  mptr = new VideoCapture("iphone_001.m4v");
+  //mptr = new VideoCapture(0);
+  VideoCapture* cap = (VideoCapture*)mptr;
+  if(!cap->isOpened())
+    {
+      cerr << "Unable to get the camera" << endl;
+      exit(-1);
+    }
+  cap->set(CV_CAP_PROP_FRAME_WIDTH, OPENCV_VIDEO_W);
+  cap->set(CV_CAP_PROP_FRAME_HEIGHT, OPENCV_VIDEO_H);
+  cout << "width is: " << cap->get(3) << " height is: " << cap->get(4) << endl;
+}
 
 VideoSource::VideoSource()
 {
   cout << "  VideoSource_Linux: Opening video source..." << endl;
-
-  //mptr = new VideoCapture("iphone_001.m4v");
-  mptr = new VideoCapture(0);
-
-  VideoCapture* cap = (VideoCapture*)mptr;
-  if(!cap->isOpened()){
-    cerr << "Unable to get the camera" << endl;
-    exit(-1);
-  }
-
-  cap->set(CV_CAP_PROP_FRAME_WIDTH, OPENCV_VIDEO_W);
-  cap->set(CV_CAP_PROP_FRAME_HEIGHT, OPENCV_VIDEO_H);
-
+  ResetVideo();
   cout << "  ... got video source." << endl;
-  cout << "width is: " << cap->get(3) << " height is: " << cap->get(4) << endl;
 
   mirSize = ImageRef(OPENCV_VIDEO_W, OPENCV_VIDEO_H);
 };
@@ -88,7 +90,18 @@ void VideoSource::GetAndFillFrameBWandRGB(Image<byte> &imBW, Image<Rgb<byte> > &
 {
   Mat frame;
   VideoCapture* cap = (VideoCapture*)mptr;
-  *cap >> frame;
+
+  bool gotFrame = cap->grab();
+  cap->retrieve(frame);
+    
+  if (!gotFrame)
+    {
+      ResetVideo();
+      cap = (VideoCapture*)mptr;
+      cap->grab();
+      cap->retrieve(frame);
+    }
+    
   conversionNB(frame, imBW);
   conversionRGB(frame, imRGB);
 }
