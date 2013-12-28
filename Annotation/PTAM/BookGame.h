@@ -17,11 +17,11 @@ class BookGame
 {
  public:
   BookGame();
+  void UpdateBaseline(double mdBaseline);
   void DrawStuff(Vector<3> v3CameraPos);
   void Reset();
   void Init();
 
-  
  protected:
   bool mbInitialised;
   void DrawEye();

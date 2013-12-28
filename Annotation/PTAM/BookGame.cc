@@ -7,9 +7,15 @@ using namespace CVD;
 
 BookGame::BookGame()
 {
+  mbInitialised = false;
   mdEyeRadius = 0.1;
   mdShadowHalfSize = 2.5 * mdEyeRadius;
-  mbInitialised = false;
+}
+
+void BookGame::UpdateBaseline(double dBaseline)
+{
+  mdEyeRadius = dBaseline;
+  mdShadowHalfSize = 2.5 * mdEyeRadius;
 }
 
 void BookGame::DrawStuff(Vector<3> v3CameraPos)

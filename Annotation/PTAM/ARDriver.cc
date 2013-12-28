@@ -44,6 +44,10 @@ void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
     };
 
   mdBaseline = GV3::get<double>("MapMaker.Baseline");
+  mGame.UpdateBaseline(mdBaseline);
+  //mGame.mdEyeRadius = mdBaseline;
+  //mGame.mdEyeRadius = 0.1;
+  //mGame.mdShadowHalfSize = 2.5 * mGame.mdEyeRadius;
   mnCounter++;
   
   // Upload the image to our frame texture
