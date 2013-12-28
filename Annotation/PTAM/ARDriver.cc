@@ -42,7 +42,8 @@ void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
       Init();
       Reset();
     };
-  
+
+  mdBaseline = GV3::get<double>("MapMaker.Baseline");
   mnCounter++;
   
   // Upload the image to our frame texture
@@ -67,6 +68,7 @@ void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
   glLoadIdentity();
   glMultMatrix(mCamera.MakeUFBLinearFrustumMatrix(0.005, 100));
   glMultMatrix(se3CfromW);
+  
   
   DrawFadingGrid();
   

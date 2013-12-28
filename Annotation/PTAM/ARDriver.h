@@ -48,6 +48,7 @@ class ARDriver
   ImageRef mirFrameSize;
   SE3<> mse3;
   bool mbInitialised;
+  double mdBaseline;
 
   // Eyeballs:
   BookGame mGame;

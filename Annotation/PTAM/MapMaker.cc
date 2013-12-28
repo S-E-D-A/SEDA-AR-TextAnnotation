@@ -339,6 +339,14 @@ bool MapMaker::InitFromStereo(KeyFrame &kF,
   ApplyGlobalTransformationToMap(CalcPlaneAligner());
   mMap.bGood = true;
   se3TrackerPose = pkSecond->se3CfromW;
+
+  double dBaseline = KeyFrameLinearDist(*pkFirst, *pkSecond);
+  cout << "Distance btwn first two frames: " << dBaseline << endl;
+
+  //Register the baseline as a GVar. This is used to set a standard size
+  //for the drawn AR graphics
+  gvar3<double> gvdBaseline;
+  GV3::Register(gvdBaseline, "MapMaker.Baseline", dBaseline, SILENT);
   
   cout << "  MapMaker: made initial map with " << mMap.vpPoints.size() << " points." << endl;
   return true; 

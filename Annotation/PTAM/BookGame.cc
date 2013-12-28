@@ -17,7 +17,7 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
   if(!mbInitialised)
     Init();
 
-  mnFrameCounter ++;
+  mnFrameCounter++;
 
   glDisable(GL_BLEND);
   glEnable(GL_CULL_FACE);

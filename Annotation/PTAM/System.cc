@@ -88,11 +88,11 @@ void System::Run()
       bool bDrawAR = mpMap->IsGood() && *gvnDrawAR;
       
       mpTracker->TrackFrame(mimFrameBW, !bDrawAR && !bDrawMap);
-      
+
       if(bDrawMap)
 	mpMapViewer->DrawMap(mpTracker->GetCurrentPose());
       else if(bDrawAR)
-	mpARDriver->Render(mimFrameRGB, mpTracker->GetCurrentPose());
+	  mpARDriver->Render(mimFrameRGB, mpTracker->GetCurrentPose());
 
       //      mGLWindow.GetMousePoseUpdate();
       string sCaption;
