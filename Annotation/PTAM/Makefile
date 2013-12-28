@@ -29,7 +29,7 @@ OBJECTS=	main.o\
 		MiniPatch.o\
 		MapViewer.o\
 		ARDriver.o\
-		EyeGame.o\
+		BookGame.o\
 		Tracker.o
 
 CALIB_OBJECTS=	GLWindow2.o\

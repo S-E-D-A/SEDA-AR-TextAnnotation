@@ -12,7 +12,7 @@ using namespace GVars3;
 VideoSource::VideoSource() 
 {
 cout << "  VideoSource_Linux: Opening video source..." << endl;
-string VideoFile = "file:///home/vagrant/SEDA-CV-DetectionAndAnnotation/Annotation/PTAM/iphone_001.m4v";
+string VideoFile = "file:///home/ddetone/Projects/SEDA-CV-DetectionAndAnnotation/Annotation/PTAM/iphone_001.m4v";
 VideoFileBuffer<Rgb<byte> > * pvb = new VideoFileBuffer<Rgb<byte> >(VideoFile);
 mirSize = pvb->size();
 mptr = pvb;

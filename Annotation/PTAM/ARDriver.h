@@ -17,7 +17,7 @@
 #include <cvd/image.h>
 #include <cvd/rgb.h>
 #include <cvd/byte.h>
-#include "EyeGame.h"
+#include "BookGame.h"
 
 using namespace std;
 using namespace CVD;
@@ -41,7 +41,7 @@ class ARDriver
   // Texture stuff:
   GLuint mnFrameBuffer;
   GLuint mnFrameBufferTex;
-  GLuint mnFrameTex;
+  GLuint mnFrameTex; //Image from videosource
   
   int mnCounter;
   ImageRef mirFBSize;
@@ -50,6 +50,6 @@ class ARDriver
   bool mbInitialised;
 
   // Eyeballs:
-  EyeGame mGame;
+  BookGame mGame;
 };
 #endif
