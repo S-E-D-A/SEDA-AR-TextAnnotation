@@ -12,16 +12,16 @@
 
 #include <TooN/TooN.h>
 #include "OpenGL.h"
+#include "MLDriver.h"
 
 using namespace TooN;
-
-struct ARSummary;
 
 class BookGame
 {
  public:
   BookGame();
   void UpdateBaseline(double mdBaseline);
+  void UpdateSummary(ARSummary* pChapSummary);
   void DrawStuff(Vector<3> v3CameraPos);
   void Reset();
   void Init();
@@ -41,7 +41,8 @@ class BookGame
   SE3<> ase3WorldFromEye[4];
   int mnFrameCounter;
 
-  ARSummary* mARSummary;
+  bool mbHasSummary;
+  ARSummary* mpChapSummary;
 
 };
 

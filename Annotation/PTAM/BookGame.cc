@@ -9,12 +9,29 @@ BookGame::BookGame()
   mbInitialised = false;
   mdEyeRadius = 0.1;
   mdShadowHalfSize = 2.5 * mdEyeRadius;
+  mbHasSummary = false;
 }
 
 void BookGame::UpdateBaseline(double dBaseline)
 {
   mdEyeRadius = dBaseline;
   mdShadowHalfSize = 2.5 * mdEyeRadius;
+}
+
+void BookGame::UpdateSummary(ARSummary* pChapSummary)
+{
+  mpChapSummary = pChapSummary;
+  // ARSummary* ptr = new ARSummary;
+  // ptr->vTopWordFreqs = pChapSummary->vTopWordFreqs;
+  // ptr->vTopWords = pChapSummary->vTopWords;
+  // ptr->nNumSumWords = pChapSummary->nNumSumWords;
+  // ptr->vSummary = pChapSummary->vSummary;
+  
+  // mpChapSummary = ptr;
+  // delete pChapSummary;
+
+  mbHasSummary = true;
+
 }
 
 void BookGame::DrawStuff(Vector<3> v3CameraPos)
@@ -60,12 +77,16 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
     }
   glDisable(GL_CULL_FACE);
 
-  for (int i=0; i<5; i++)
+  if (mbHasSummary)
     {
-      glLoadIdentity();
-      glTranslatef(0.4f + i*0.15f, 0.0f, 0.2f);
-      glScaled(mdEyeRadius*1.5, mdEyeRadius*1.5, mdEyeRadius*4);
-      glCallList(mnHistDisplayList[i]);
+      for (int i=0; i<5; i++)
+	{
+	  glLoadIdentity();
+	  glTranslatef(0.4f + i*0.15f, 0.0f, 0.2f);
+	  double dHeight = mpChapSummary->vTopWordFreqs[i];
+	  glScaled(mdEyeRadius*1.5, mdEyeRadius*1.5, mdEyeRadius*dHeight);
+	  glCallList(mnHistDisplayList[i]);
+	}
     }
 
   //Draw Shadows

@@ -29,6 +29,10 @@ class ARDriver
   void Render(Image<Rgb<byte> > &imFrame, SE3<> se3CamFromWorld);
   void Reset();
   void Init();
+
+  // Eyeballs:
+  BookGame mGame;
+
  protected:
   ATANCamera mCamera;
   GLWindow2 &mGLWindow;
@@ -50,7 +54,5 @@ class ARDriver
   bool mbInitialised;
   double mdBaseline;
 
-  // Eyeballs:
-  BookGame mGame;
 };
 #endif

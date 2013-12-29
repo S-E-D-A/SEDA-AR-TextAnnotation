@@ -25,27 +25,27 @@ ARSummary* MLDriver::GetSummary(int nChapter)
       fsSummary.close();
     }
 
-  ARSummary* ChapSummary = new ARSummary;
+  ARSummary* pChapSummary = new ARSummary;
   vector<string> vStrings;
 
   //First line: top word frequencies
   vStrings = ParseLine(vLines[0]);
   for (int i=0; i<vStrings.size(); i++)
-    ChapSummary->vTopWordFreqs.push_back(atoi(vStrings[i].c_str()));
+    pChapSummary->vTopWordFreqs.push_back(atoi(vStrings[i].c_str()));
 
   //Second line: top words
   vStrings = ParseLine(vLines[1]);
-  ChapSummary->vTopWords = vStrings;
+  pChapSummary->vTopWords = vStrings;
 
   //Third line: number of words in summary
-  ChapSummary->nNumSumWords = atoi(vLines[2].c_str());
+  pChapSummary->nNumSumWords = atoi(vLines[2].c_str());
 
   //Fourth line: summary
   vStrings = ParseLine(vLines[3]);
   for (int i=0; i<vStrings.size(); i++)
-      ChapSummary->vSummary.push_back(vStrings[i].c_str());
+      pChapSummary->vSummary.push_back(vStrings[i].c_str());
   
-  return ChapSummary;
+  return pChapSummary;
 
 }
 

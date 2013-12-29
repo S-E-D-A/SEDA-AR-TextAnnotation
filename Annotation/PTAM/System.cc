@@ -96,21 +96,22 @@ void System::Run()
       //bNewSummary will be the return value of some CV related function
       //such as template matching
       bool bNewSummary;
-      ARSummary Summary;
+      ARSummary* pChapSummary;
       if (mnFrame % 100 == 0)
 	{
-	  mpMLDriver->GetSummary(1);
+	  pChapSummary = mpMLDriver->GetSummary(1);
 	  bNewSummary = true;
 	}
-      else
-	bNewSummary = false;
 
       if(bDrawMap)
 	mpMapViewer->DrawMap(mpTracker->GetCurrentPose());
       else if(bDrawAR)
 	{
-	  //if (bNewSummary)
-	  //mpARDriver->UpdateSummary(1);
+	  if (bNewSummary)
+	    {
+	      mpARDriver->mGame.UpdateSummary(pChapSummary);
+	      bNewSummary = false;
+	    }
 	  mpARDriver->Render(mimFrameRGB, mpTracker->GetCurrentPose());
 	}
 
