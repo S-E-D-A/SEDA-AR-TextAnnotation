@@ -1,6 +1,5 @@
 // Copyright 2008 Isis Innovation Limited
 #include "BookGame.h"
-#include "OpenGL.h"
 #include <cvd/convolution.h>
 
 using namespace CVD;
@@ -24,7 +23,6 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
     Init();
 
   mnFrameCounter++;
-
   glDisable(GL_BLEND);
   glEnable(GL_CULL_FACE);
   glFrontFace(GL_CW);
@@ -186,59 +184,46 @@ void BookGame::DrawEye()
 
 }
 
-void BookGame::DrawHist()
+void BookGame::DrawCube(GLfloat size, GLenum type)
 {
-  double length = 1.0f;
-  double half = length/2;
-  // face 1
-  glBegin(GL_POLYGON);
-  glColor3f(0.0f, 1.0f, 0.0f);     // Green
-  glVertex3d(half, -half, half); 
-  glVertex3d(half, half, half); 
-  glVertex3d(-half, half, half); 
-  glVertex3d(-half, -half, half); 
-  glEnd();
-  // face 2
-  glBegin(GL_POLYGON);
-  //glColor3f(1.0f, 0.5f, 0.0f);     // Orange
-  glVertex3d(half, -half, -half); 
-  glVertex3d(half, half, -half); 
-  glVertex3d(-half, half, -half); 
-  glVertex3d(-half, -half, -half); 
-  glEnd();
-  // face 3
-  glBegin(GL_POLYGON);
-  //glColor3f(1.0f, 0.0f, 0.0f);     // Red
-  glVertex3d(half, half, half); 
-  glVertex3d(half, -half, half); 
-  glVertex3d(half, -half, -half); 
-  glVertex3d(half, half, -half); 
-  glEnd();
-  // face 4
-  glBegin(GL_POLYGON);
-  //glColor3f(1.0f, 1.0f, 0.0f);     // Yellow
-  glVertex3d(-half, -half, half); 
-  glVertex3d(-half, half, half); 
-  glVertex3d(-half, half, -half); 
-  glVertex3d(-half, -half, -half); 
-  glEnd();
-  // face 5
-  glBegin(GL_POLYGON);
-  //glColor3f(0.0f, 0.0f, 1.0f);     // Blue
-  glVertex3d(half, half, half); 
-  glVertex3d(half, half, -half); 
-  glVertex3d(-half, half, -half); 
-  glVertex3d(-half, half, half); 
-  glEnd();
-  // face 6
-  glBegin(GL_POLYGON);
-  //glColor3f(1.0f, 0.0f, 1.0f);     // Magenta
-  glVertex3d(half, -half, half); 
-  glVertex3d(half, -half, -half); 
-  glVertex3d(-half, -half, -half); 
-  glVertex3d(-half, -half, half); 
-  glEnd();
+  glColor3f(0.0f, 1.0f, 0.0f); //Green
+  static GLfloat n[6][3] =
+    {
+      {-1.0, 0.0, 0.0},
+      {0.0, 1.0, 0.0},
+      {1.0, 0.0, 0.0},
+      {0.0, -1.0, 0.0},
+      {0.0, 0.0, 1.0},
+      {0.0, 0.0, -1.0}
+    };
+  static GLint faces[6][4] =
+    {
+      {0, 1, 2, 3},
+      {3, 2, 6, 7},
+      {7, 6, 5, 4},
+      {4, 5, 1, 0},
+      {5, 6, 2, 1},
+      {7, 4, 0, 3}
+    };
+  GLfloat v[8][3];
+  GLint i;
 
+  v[0][0] = v[1][0] = v[2][0] = v[3][0] = -size / 2;
+  v[4][0] = v[5][0] = v[6][0] = v[7][0] = size / 2;
+  v[0][1] = v[1][1] = v[4][1] = v[5][1] = -size / 2;
+  v[2][1] = v[3][1] = v[6][1] = v[7][1] = size / 2;
+  v[0][2] = v[3][2] = v[4][2] = v[7][2] = -size / 2;
+  v[1][2] = v[2][2] = v[5][2] = v[6][2] = size / 2;
+
+  for (i = 5; i >= 0; i--) {
+    glBegin(type);
+    glNormal3fv(&n[i][0]);
+    glVertex3fv(&v[faces[i][0]][0]);
+    glVertex3fv(&v[faces[i][1]][0]);
+    glVertex3fv(&v[faces[i][2]][0]);
+    glVertex3fv(&v[faces[i][3]][0]);
+    glEnd();
+  }
 }
 
 void BookGame::Init()
@@ -255,7 +240,8 @@ void BookGame::Init()
   // Set up the display list for the histogram
   mnHistDisplayList = glGenLists(1);
   glNewList(mnHistDisplayList,GL_COMPILE);
-  DrawHist();
+  //DrawHist();
+  DrawCube(1.0f, GL_QUADS);
   glEndList();
 
   MakeShadowTex();

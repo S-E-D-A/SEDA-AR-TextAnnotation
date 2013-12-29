@@ -9,9 +9,11 @@
 //
 #ifndef __BOOKGAME_H
 #define __BOOKGAME_H
+
 #include <TooN/TooN.h>
-using namespace TooN;
 #include "OpenGL.h"
+
+using namespace TooN;
 
 class BookGame
 {
@@ -25,7 +27,7 @@ class BookGame
  protected:
   bool mbInitialised;
   void DrawEye();
-  void DrawHist();
+  void DrawCube(GLfloat size, GLenum type);
   void LookAt(int nEye, Vector<3> v3, double dRotLimit);
   void MakeShadowTex();
  
