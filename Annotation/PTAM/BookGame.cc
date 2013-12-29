@@ -187,7 +187,7 @@ void BookGame::DrawEye()
 
 void BookGame::DrawCube(GLfloat size, GLenum type)
 {
-  glColor3f(0.15f, 0.15f, 0.15f); //Green
+  glColor3f(0.15f, 0.15f, 0.15f); //Grey
   static GLfloat n[6][3] =
     {
       {-1.0, 0.0, 0.0},

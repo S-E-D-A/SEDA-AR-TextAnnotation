@@ -22,6 +22,7 @@ class Map;
 class MapMaker;
 class Tracker;
 class ARDriver;
+class MLDriver;
 class MapViewer;
 
 class System
@@ -41,9 +42,11 @@ private:
   Tracker *mpTracker; 
   ATANCamera *mpCamera;
   ARDriver *mpARDriver;
+  MLDriver *mpMLDriver;
   MapViewer *mpMapViewer;
   
   bool mbDone;
+  int mnFrame;
 
   static void GUICommandCallBack(void* ptr, std::string sCommand, std::string sParams);
 };

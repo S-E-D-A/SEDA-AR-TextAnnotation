@@ -29,6 +29,7 @@ OBJECTS=	main.o\
 		MiniPatch.o\
 		MapViewer.o\
 		ARDriver.o\
+		MLDriver.o\
 		BookGame.o\
 		Tracker.o
 

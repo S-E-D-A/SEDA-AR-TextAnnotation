@@ -15,6 +15,8 @@
 
 using namespace TooN;
 
+struct ARSummary;
+
 class BookGame
 {
  public:
@@ -38,6 +40,8 @@ class BookGame
   double mdShadowHalfSize;
   SE3<> ase3WorldFromEye[4];
   int mnFrameCounter;
+
+  ARSummary* mARSummary;
 
 };
 
