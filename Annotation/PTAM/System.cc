@@ -58,6 +58,7 @@ System::System()
   mbDone = false;
   mbNewSummary = false;
   mnFrame = 0;
+  mnSummary = 1;
 };
 
 void System::Run()
@@ -100,7 +101,9 @@ void System::Run()
       if (mnFrame % 100 == 0)
 	{
 	  cout << "Get Summary" << endl;
-	  pChapSummary = mpMLDriver->GetSummary(1);
+	  pChapSummary = mpMLDriver->GetSummary(mnSummary++);
+	  if (mnSummary == 4)
+	    mnSummary = 1;
 	  mbNewSummary = true;
 	}
 

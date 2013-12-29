@@ -48,6 +48,7 @@ private:
   bool mbDone;
   bool mbNewSummary;
   int mnFrame;
+  int mnSummary;
 
   static void GUICommandCallBack(void* ptr, std::string sCommand, std::string sParams);
 };
