@@ -58,13 +58,15 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
       glScaled(mdEyeRadius, mdEyeRadius, mdEyeRadius);
       glCallList(mnEyeDisplayList);
     }
-
-  //Scale the hist
   glDisable(GL_CULL_FACE);
-  glLoadIdentity();
-  glTranslatef(0.4f, 0.0f, 0.2f);
-  glScaled(mdEyeRadius*1.5, mdEyeRadius*1.5, mdEyeRadius*4);
-  glCallList(mnHistDisplayList);
+
+  for (int i=0; i<5; i++)
+    {
+      glLoadIdentity();
+      glTranslatef(0.4f + i*0.15f, 0.0f, 0.2f);
+      glScaled(mdEyeRadius*1.5, mdEyeRadius*1.5, mdEyeRadius*4);
+      glCallList(mnHistDisplayList[i]);
+    }
 
   //Draw Shadows
   glDisable(GL_LIGHTING);
@@ -85,7 +87,6 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
   glEnd();
   glDisable(GL_TEXTURE_2D);
   glDisable(GL_DEPTH_TEST);
-  //glDisable(GL_CULL_FACE);
 };
 
 
@@ -186,7 +187,7 @@ void BookGame::DrawEye()
 
 void BookGame::DrawCube(GLfloat size, GLenum type)
 {
-  glColor3f(0.0f, 1.0f, 0.0f); //Green
+  glColor3f(0.15f, 0.15f, 0.15f); //Green
   static GLfloat n[6][3] =
     {
       {-1.0, 0.0, 0.0},
@@ -238,11 +239,13 @@ void BookGame::Init()
   glEndList();
 
   // Set up the display list for the histogram
-  mnHistDisplayList = glGenLists(1);
-  glNewList(mnHistDisplayList,GL_COMPILE);
-  //DrawHist();
-  DrawCube(1.0f, GL_QUADS);
-  glEndList();
+  for (int i=0; i<5; i++)
+    {
+      mnHistDisplayList.push_back(glGenLists(1));
+      glNewList(mnHistDisplayList[i],GL_COMPILE);
+      DrawCube(1.0f, GL_QUADS);
+      glEndList();
+    }
 
   MakeShadowTex();
 };

@@ -32,7 +32,7 @@ class BookGame
   void MakeShadowTex();
  
   GLuint mnEyeDisplayList;
-  GLuint mnHistDisplayList;
+  std::vector<GLuint> mnHistDisplayList;
   GLuint mnShadowTex;
   double mdEyeRadius;
   double mdShadowHalfSize;
