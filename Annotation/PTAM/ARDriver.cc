@@ -14,6 +14,7 @@ ARDriver::ARDriver(const ATANCamera &cam, ImageRef irFrameSize, GLWindow2 &glw)
   mirFrameSize = irFrameSize;
   mCamera.SetImageSize(mirFrameSize);
   mbInitialised = false;
+  mpGame = new BookGame();
 }
 
 void ARDriver::Init()
@@ -26,12 +27,12 @@ void ARDriver::Init()
 	       GL_RGBA, mirFrameSize.x, mirFrameSize.y, 0, 
 	       GL_RGBA, GL_UNSIGNED_BYTE, NULL); 
   MakeFrameBuffer();
-  mGame.Init();
+  mpGame->Init();
 };
 
 void ARDriver::Reset()
 {
-  mGame.Reset();
+  mpGame->Reset();
   mnCounter = 0;
 }
 
@@ -44,7 +45,7 @@ void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
     };
 
   mdBaseline = GV3::get<double>("MapMaker.Baseline");
-  mGame.UpdateBaseline(mdBaseline);
+  mpGame->UpdateBaseline(mdBaseline);
 
   mnCounter++;
   
@@ -74,7 +75,7 @@ void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
   
   DrawFadingGrid();
   
-  mGame.DrawStuff(se3CfromW.inverse().get_translation());
+  mpGame->DrawStuff(se3CfromW.inverse().get_translation());
   
   glDisable(GL_DEPTH_TEST);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

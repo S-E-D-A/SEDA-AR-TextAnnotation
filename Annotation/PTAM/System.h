@@ -46,6 +46,7 @@ private:
   MapViewer *mpMapViewer;
   
   bool mbDone;
+  bool mbNewSummary;
   int mnFrame;
 
   static void GUICommandCallBack(void* ptr, std::string sCommand, std::string sParams);

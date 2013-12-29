@@ -56,6 +56,7 @@ System::System()
   GUI.ParseLine("Menu.AddMenuToggle Root \"Draw AR\" DrawAR Root");
   
   mbDone = false;
+  mbNewSummary = false;
   mnFrame = 0;
 };
 
@@ -95,22 +96,22 @@ void System::Run()
 
       //bNewSummary will be the return value of some CV related function
       //such as template matching
-      bool bNewSummary;
       ARSummary* pChapSummary;
       if (mnFrame % 100 == 0)
 	{
+	  cout << "Get Summary" << endl;
 	  pChapSummary = mpMLDriver->GetSummary(1);
-	  bNewSummary = true;
+	  mbNewSummary = true;
 	}
 
       if(bDrawMap)
 	mpMapViewer->DrawMap(mpTracker->GetCurrentPose());
       else if(bDrawAR)
 	{
-	  if (bNewSummary)
+	  if (mbNewSummary)
 	    {
-	      mpARDriver->mGame.UpdateSummary(pChapSummary);
-	      bNewSummary = false;
+	      mpARDriver->mpGame->UpdateSummary(pChapSummary);
+	      mbNewSummary = false;
 	    }
 	  mpARDriver->Render(mimFrameRGB, mpTracker->GetCurrentPose());
 	}

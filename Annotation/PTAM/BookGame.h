@@ -36,7 +36,7 @@ class BookGame
   GLuint mnEyeDisplayList;
   std::vector<GLuint> mnHistDisplayList;
   GLuint mnShadowTex;
-  double mdEyeRadius;
+  double mdBaseline;
   double mdShadowHalfSize;
   SE3<> ase3WorldFromEye[4];
   int mnFrameCounter;

@@ -31,7 +31,7 @@ class ARDriver
   void Init();
 
   // Eyeballs:
-  BookGame mGame;
+  BookGame* mpGame;
 
  protected:
   ATANCamera mCamera;

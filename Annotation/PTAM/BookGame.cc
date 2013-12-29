@@ -7,19 +7,21 @@ using namespace CVD;
 BookGame::BookGame()
 {
   mbInitialised = false;
-  mdEyeRadius = 0.1;
-  mdShadowHalfSize = 2.5 * mdEyeRadius;
+  mdBaseline = 0.1;
+  mdShadowHalfSize = 2.5 * mdBaseline;
   mbHasSummary = false;
 }
 
 void BookGame::UpdateBaseline(double dBaseline)
 {
-  mdEyeRadius = dBaseline;
-  mdShadowHalfSize = 2.5 * mdEyeRadius;
+  mdBaseline = dBaseline;
+  mdShadowHalfSize = 2.5 * mdBaseline;
 }
 
 void BookGame::UpdateSummary(ARSummary* pChapSummary)
 {
+
+  mbHasSummary = true;
   mpChapSummary = pChapSummary;
   // ARSummary* ptr = new ARSummary;
   // ptr->vTopWordFreqs = pChapSummary->vTopWordFreqs;
@@ -30,7 +32,7 @@ void BookGame::UpdateSummary(ARSummary* pChapSummary)
   // mpChapSummary = ptr;
   // delete pChapSummary;
 
-  mbHasSummary = true;
+
 
 }
 
@@ -72,22 +74,24 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
       
       glLoadIdentity();
       glMultMatrix(ase3WorldFromEye[i]);
-      glScaled(mdEyeRadius, mdEyeRadius, mdEyeRadius);
+      glScaled(mdBaseline, mdBaseline, mdBaseline);
       glCallList(mnEyeDisplayList);
     }
   glDisable(GL_CULL_FACE);
 
   if (mbHasSummary)
-    {
-      for (int i=0; i<5; i++)
-	{
-	  glLoadIdentity();
-	  glTranslatef(0.4f + i*0.15f, 0.0f, 0.2f);
-	  double dHeight = mpChapSummary->vTopWordFreqs[i];
-	  glScaled(mdEyeRadius*1.5, mdEyeRadius*1.5, mdEyeRadius*dHeight);
-	  glCallList(mnHistDisplayList[i]);
-	}
-    }
+  {
+    for (int i=0; i<5; i++)
+      {
+	glLoadIdentity();
+	double width = mdBaseline;
+	double height = width*4*mpChapSummary->vTopWordFreqs[i];
+
+	glTranslatef(width*4 + i*1.5*width, 0.0f, width*(height/2));
+	glScaled(width, width, width*height);
+	glCallList(mnHistDisplayList[i]);
+      }
+  }
 
   //Draw Shadows
   glDisable(GL_LIGHTING);
@@ -116,20 +120,20 @@ void BookGame::Reset()
   for(int i=0; i<4; i++)
     ase3WorldFromEye[i] = SE3<>();
 
-  ase3WorldFromEye[0].get_translation()[0] = -mdEyeRadius;
-  ase3WorldFromEye[1].get_translation()[0] = mdEyeRadius;
-  ase3WorldFromEye[2].get_translation()[0] = -mdEyeRadius;
-  ase3WorldFromEye[3].get_translation()[0] = mdEyeRadius;
+  ase3WorldFromEye[0].get_translation()[0] = -mdBaseline;
+  ase3WorldFromEye[1].get_translation()[0] = mdBaseline;
+  ase3WorldFromEye[2].get_translation()[0] = -mdBaseline;
+  ase3WorldFromEye[3].get_translation()[0] = mdBaseline;
 
-  ase3WorldFromEye[0].get_translation()[1] = -mdEyeRadius;
-  ase3WorldFromEye[1].get_translation()[1] = -mdEyeRadius;
-  ase3WorldFromEye[2].get_translation()[1] = mdEyeRadius;
-  ase3WorldFromEye[3].get_translation()[1] = mdEyeRadius;
+  ase3WorldFromEye[0].get_translation()[1] = -mdBaseline;
+  ase3WorldFromEye[1].get_translation()[1] = -mdBaseline;
+  ase3WorldFromEye[2].get_translation()[1] = mdBaseline;
+  ase3WorldFromEye[3].get_translation()[1] = mdBaseline;
 
-  ase3WorldFromEye[0].get_translation()[2] = mdEyeRadius;
-  ase3WorldFromEye[1].get_translation()[2] = mdEyeRadius;
-  ase3WorldFromEye[2].get_translation()[2] = mdEyeRadius;
-  ase3WorldFromEye[3].get_translation()[2] = mdEyeRadius;
+  ase3WorldFromEye[0].get_translation()[2] = mdBaseline;
+  ase3WorldFromEye[1].get_translation()[2] = mdBaseline;
+  ase3WorldFromEye[2].get_translation()[2] = mdBaseline;
+  ase3WorldFromEye[3].get_translation()[2] = mdBaseline;
   mnFrameCounter = 0;
 };
 
@@ -300,7 +304,7 @@ void BookGame::MakeShadowTex()
 {
   const int nTexSize = 256;
   Image<byte> imShadow(ImageRef(nTexSize, nTexSize));
-  double dFrac = 1.0 - mdEyeRadius / mdShadowHalfSize;
+  double dFrac = 1.0 - mdBaseline / mdShadowHalfSize;
   double dCenterPos = dFrac * nTexSize / 2 - 0.5;
   ImageRef irCenter; irCenter.x = irCenter.y = (int) dCenterPos;
   int nRadius = int ((nTexSize / 2 - irCenter.x) * 1.05);
