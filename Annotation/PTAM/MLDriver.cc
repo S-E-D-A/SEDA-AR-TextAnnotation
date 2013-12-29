@@ -30,13 +30,10 @@ ARSummary* MLDriver::GetSummary(int nChapter)
 
   //First line: top word frequencies
   vStrings = ParseLine(vLines[0]);
-  //vector<int> vTopWordFreqs;
   for (int i=0; i<vStrings.size(); i++)
     ChapSummary->vTopWordFreqs.push_back(atoi(vStrings[i].c_str()));
-  //  ChapSummary.TopWordFreqs = vTopWordFreqs;
 
   //Second line: top words
-  vStrings.clear();
   vStrings = ParseLine(vLines[1]);
   ChapSummary->vTopWords = vStrings;
 
@@ -44,13 +41,9 @@ ARSummary* MLDriver::GetSummary(int nChapter)
   ChapSummary->nNumSumWords = atoi(vLines[2].c_str());
 
   //Fourth line: summary
-  vStrings.clear();
   vStrings = ParseLine(vLines[3]);
   for (int i=0; i<vStrings.size(); i++)
-    {
       ChapSummary->vSummary.push_back(vStrings[i].c_str());
-      cout << vStrings[i] << endl;
-    }
   
   return ChapSummary;
 
