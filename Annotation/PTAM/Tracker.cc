@@ -309,7 +309,7 @@ void Tracker::TrackForInitialMap()
   // What stage of initial tracking are we at?
   if(mnInitialStage == TRAIL_TRACKING_NOT_STARTED) 
     {
-      if(mbUserPressedSpacebar || mnFrame==110)  // First spacebar = this is the first keyframe
+      if(mbUserPressedSpacebar || mnFrame==60)  // First spacebar = this is the first keyframe
 	{
 	  mbUserPressedSpacebar = false;
 	  TrailTracking_Start();
@@ -330,7 +330,7 @@ void Tracker::TrackForInitialMap()
 	}
       
       // If the user pressed spacebar here, use trails to run stereo and make the intial map..
-      if(mbUserPressedSpacebar || mnFrame==120)
+      if(mbUserPressedSpacebar || mnFrame==80)
 	{
 	  mbUserPressedSpacebar = false;
 	  vector<pair<ImageRef, ImageRef> > vMatches;   // This is the format the mapmaker wants for the stereo pairs

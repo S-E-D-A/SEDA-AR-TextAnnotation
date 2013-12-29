@@ -25,10 +25,12 @@ class BookGame
  protected:
   bool mbInitialised;
   void DrawEye();
+  void DrawHist();
   void LookAt(int nEye, Vector<3> v3, double dRotLimit);
   void MakeShadowTex();
  
   GLuint mnEyeDisplayList;
+  GLuint mnHistDisplayList;
   GLuint mnShadowTex;
   double mdEyeRadius;
   double mdShadowHalfSize;

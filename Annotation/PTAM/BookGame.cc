@@ -34,7 +34,7 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
   glEnable(GL_LIGHT0);
   glEnable(GL_NORMALIZE);
   glEnable(GL_COLOR_MATERIAL);
-  
+
   GLfloat af[4]; 
   af[0]=0.5; af[1]=0.5; af[2]=0.5; af[3]=1.0;
   glLightfv(GL_LIGHT0, GL_AMBIENT, af);
@@ -47,6 +47,7 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
   
   glMatrixMode(GL_MODELVIEW);
   
+  //Translate, Rotate, Scale each Eyeball
   for(int i=0; i<4; i++)
     {
       if(mnFrameCounter < 100)
@@ -59,9 +60,16 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
       glScaled(mdEyeRadius, mdEyeRadius, mdEyeRadius);
       glCallList(mnEyeDisplayList);
     }
-  
+
+  //Scale the hist
+  glDisable(GL_CULL_FACE);
+  glLoadIdentity();
+  glTranslatef(0.4f, 0.0f, 0.2f);
+  glScaled(mdEyeRadius*1.5, mdEyeRadius*1.5, mdEyeRadius*4);
+  glCallList(mnHistDisplayList);
+
+  //Draw Shadows
   glDisable(GL_LIGHTING);
-  
   glLoadIdentity();
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, mnShadowTex);
@@ -79,7 +87,7 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
   glEnd();
   glDisable(GL_TEXTURE_2D);
   glDisable(GL_DEPTH_TEST);
-  glDisable(GL_CULL_FACE);
+  //glDisable(GL_CULL_FACE);
 };
 
 
@@ -175,17 +183,81 @@ void BookGame::DrawEye()
     glVertex3f(0,R,-Z);
     glEnd();
   };
+
+}
+
+void BookGame::DrawHist()
+{
+  double length = 1.0f;
+  double half = length/2;
+  // face 1
+  glBegin(GL_POLYGON);
+  glColor3f(0.0f, 1.0f, 0.0f);     // Green
+  glVertex3d(half, -half, half); 
+  glVertex3d(half, half, half); 
+  glVertex3d(-half, half, half); 
+  glVertex3d(-half, -half, half); 
+  glEnd();
+  // face 2
+  glBegin(GL_POLYGON);
+  //glColor3f(1.0f, 0.5f, 0.0f);     // Orange
+  glVertex3d(half, -half, -half); 
+  glVertex3d(half, half, -half); 
+  glVertex3d(-half, half, -half); 
+  glVertex3d(-half, -half, -half); 
+  glEnd();
+  // face 3
+  glBegin(GL_POLYGON);
+  //glColor3f(1.0f, 0.0f, 0.0f);     // Red
+  glVertex3d(half, half, half); 
+  glVertex3d(half, -half, half); 
+  glVertex3d(half, -half, -half); 
+  glVertex3d(half, half, -half); 
+  glEnd();
+  // face 4
+  glBegin(GL_POLYGON);
+  //glColor3f(1.0f, 1.0f, 0.0f);     // Yellow
+  glVertex3d(-half, -half, half); 
+  glVertex3d(-half, half, half); 
+  glVertex3d(-half, half, -half); 
+  glVertex3d(-half, -half, -half); 
+  glEnd();
+  // face 5
+  glBegin(GL_POLYGON);
+  //glColor3f(0.0f, 0.0f, 1.0f);     // Blue
+  glVertex3d(half, half, half); 
+  glVertex3d(half, half, -half); 
+  glVertex3d(-half, half, -half); 
+  glVertex3d(-half, half, half); 
+  glEnd();
+  // face 6
+  glBegin(GL_POLYGON);
+  //glColor3f(1.0f, 0.0f, 1.0f);     // Magenta
+  glVertex3d(half, -half, half); 
+  glVertex3d(half, -half, -half); 
+  glVertex3d(-half, -half, -half); 
+  glVertex3d(-half, -half, half); 
+  glEnd();
+
 }
 
 void BookGame::Init()
 {
   if(mbInitialised) return;
   mbInitialised = true;
+
   // Set up the display list for the eyeball.
   mnEyeDisplayList = glGenLists(1);
   glNewList(mnEyeDisplayList,GL_COMPILE);
   DrawEye();
   glEndList();
+
+  // Set up the display list for the histogram
+  mnHistDisplayList = glGenLists(1);
+  glNewList(mnHistDisplayList,GL_COMPILE);
+  DrawHist();
+  glEndList();
+
   MakeShadowTex();
 };
 
