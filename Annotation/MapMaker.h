@@ -117,7 +117,6 @@ protected:
   GVars3::gvar3<double> mgvdWiggleScale;   // GVar for above
   double mdWiggleScaleDepthNormalized;  // The above normalized against scene depth, 
                                         // this controls keyframe separation
-  
   bool mbBundleConverged_Full;    // Has global bundle adjustment converged?
   bool mbBundleConverged_Recent;  // Has local bundle adjustment converged?
   

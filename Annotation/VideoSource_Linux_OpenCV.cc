@@ -35,8 +35,12 @@ using namespace cv;
 
 void VideoSource::ResetVideo()
 {
-  mptr = new VideoCapture("iphone_001.m4v");
-  //mptr = new VideoCapture(0);
+  string sVideoFile = GV3::get<string>("Videofile");
+  if (sVideoFile == "")
+    mptr = new VideoCapture(0); //use default webcam
+  else
+    mptr = new VideoCapture(sVideoFile);
+
   VideoCapture* cap = (VideoCapture*)mptr;
   if(!cap->isOpened())
     {

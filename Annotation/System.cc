@@ -7,6 +7,7 @@
 #include "MapMaker.h"
 #include "Tracker.h"
 #include "ARDriver.h"
+#include "MLDriver.h"
 #include "MapViewer.h"
 
 using namespace CVD;
@@ -42,6 +43,7 @@ System::System()
   mpMapMaker = new MapMaker(*mpMap, *mpCamera);
   mpTracker = new Tracker(mVideoSource.Size(), *mpCamera, *mpMap, *mpMapMaker);
   mpARDriver = new ARDriver(*mpCamera, mVideoSource.Size(), mGLWindow);
+  mpMLDriver = new MLDriver();
   mpMapViewer = new MapViewer(*mpMap, mGLWindow);
   
   GUI.ParseLine("GLWindow.AddMenu Menu Menu");
@@ -54,6 +56,9 @@ System::System()
   GUI.ParseLine("Menu.AddMenuToggle Root \"Draw AR\" DrawAR Root");
   
   mbDone = false;
+  mbNewSummary = false;
+  mnFrame = 0;
+  mnSummary = 1;
 };
 
 void System::Run()
@@ -66,7 +71,8 @@ void System::Run()
       // and one RGB, for drawing.
 
       // Grab new video frame...
-      mVideoSource.GetAndFillFrameBWandRGB(mimFrameBW, mimFrameRGB);  
+      mVideoSource.GetAndFillFrameBWandRGB(mimFrameBW, mimFrameRGB);
+      mnFrame++;
       static bool bFirstFrame = true;
       if(bFirstFrame)
 	{
@@ -88,11 +94,30 @@ void System::Run()
       bool bDrawAR = mpMap->IsGood() && *gvnDrawAR;
       
       mpTracker->TrackFrame(mimFrameBW, !bDrawAR && !bDrawMap);
-      
+
+      //bNewSummary will be the return value of some CV related function
+      //such as template matching
+      ARSummary* pChapSummary;
+      if (mnFrame % 100 == 0)
+	{
+	  cout << "Get Summary" << endl;
+	  pChapSummary = mpMLDriver->GetSummary(mnSummary++);
+	  if (mnSummary == 4)
+	    mnSummary = 1;
+	  mbNewSummary = true;
+	}
+
       if(bDrawMap)
 	mpMapViewer->DrawMap(mpTracker->GetCurrentPose());
       else if(bDrawAR)
-	mpARDriver->Render(mimFrameRGB, mpTracker->GetCurrentPose());
+	{
+	  if (mbNewSummary)
+	    {
+	      mpARDriver->mpGame->UpdateSummary(pChapSummary);
+	      mbNewSummary = false;
+	    }
+	  mpARDriver->Render(mimFrameRGB, mpTracker->GetCurrentPose());
+	}
 
       //      mGLWindow.GetMousePoseUpdate();
       string sCaption;

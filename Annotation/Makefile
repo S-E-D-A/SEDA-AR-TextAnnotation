@@ -4,8 +4,12 @@
 # Edit the lines below to point to any needed include and link paths
 # Or to change the compiler's optimization flags
 CC = g++
-COMPILEFLAGS = -g -O3 -D_LINUX -D_REENTRANT -Wall -march=nocona -msse3
-LINKFLAGS = -g -L /usr/local/lib -lGVars3 -lcvd -llapack -lblas -lopencv_core -lopencv_highgui -lopencv_imgproc
+
+PKG_INCLUDE = $(shell pkg-config --cflags pangocairo)
+COMPILEFLAGS = -g $(PKG_INCLUDE) -O3 -D_LINUX -D_REENTRANT -Wall -march=nocona -msse3
+
+PKG_LIBS = $(shell pkg-config --libs pangocairo)
+LINKFLAGS = -L -/usr/local/lib $(PKG_LIBS) -lGVars3 -lcvd -llapack -lblas -lopencv_core -lopencv_highgui -lopencv_imgproc 
 
 # Edit this line to change video source
 VIDEOSOURCE = VideoSource_Linux_OpenCV.o
@@ -29,7 +33,8 @@ OBJECTS=	main.o\
 		MiniPatch.o\
 		MapViewer.o\
 		ARDriver.o\
-		EyeGame.o\
+		MLDriver.o\
+		BookGame.o\
 		Tracker.o
 
 CALIB_OBJECTS=	GLWindow2.o\

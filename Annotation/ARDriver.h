@@ -17,7 +17,7 @@
 #include <cvd/image.h>
 #include <cvd/rgb.h>
 #include <cvd/byte.h>
-#include "EyeGame.h"
+#include "BookGame.h"
 
 using namespace std;
 using namespace CVD;
@@ -29,6 +29,10 @@ class ARDriver
   void Render(Image<Rgb<byte> > &imFrame, SE3<> se3CamFromWorld);
   void Reset();
   void Init();
+
+  // Eyeballs:
+  BookGame* mpGame;
+
  protected:
   ATANCamera mCamera;
   GLWindow2 &mGLWindow;
@@ -41,15 +45,14 @@ class ARDriver
   // Texture stuff:
   GLuint mnFrameBuffer;
   GLuint mnFrameBufferTex;
-  GLuint mnFrameTex;
+  GLuint mnFrameTex; //Image from videosource
   
   int mnCounter;
   ImageRef mirFBSize;
   ImageRef mirFrameSize;
   SE3<> mse3;
   bool mbInitialised;
+  double mdBaseline;
 
-  // Eyeballs:
-  EyeGame mGame;
 };
 #endif
