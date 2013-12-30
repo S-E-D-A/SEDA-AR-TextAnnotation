@@ -20,20 +20,9 @@ void BookGame::UpdateBaseline(double dBaseline)
 
 void BookGame::UpdateSummary(ARSummary* pChapSummary)
 {
-
   mbHasSummary = true;
   mpChapSummary = pChapSummary;
-  // ARSummary* ptr = new ARSummary;
-  // ptr->vTopWordFreqs = pChapSummary->vTopWordFreqs;
-  // ptr->vTopWords = pChapSummary->vTopWords;
-  // ptr->nNumSumWords = pChapSummary->nNumSumWords;
-  // ptr->vSummary = pChapSummary->vSummary;
-  
-  // mpChapSummary = ptr;
   // delete pChapSummary;
-
-
-
 }
 
 void BookGame::DrawStuff(Vector<3> v3CameraPos)
@@ -112,6 +101,30 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
   glEnd();
   glDisable(GL_TEXTURE_2D);
   glDisable(GL_DEPTH_TEST);
+
+
+  // cairo_surface_t *surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 240, 80);
+  // cairo_t *cr = cairo_create (surface);
+
+  // PangoLayout *layout;
+  // PangoFontDescription *font_description;
+
+  // font_description = pango_font_description_new ();
+  // pango_font_description_set_family (font_description, "serif");
+  // pango_font_description_set_weight (font_description, PANGO_WEIGHT_BOLD);
+  // pango_font_description_set_absolute_size (font_description, 32 * PANGO_SCALE);
+
+  // layout = pango_cairo_create_layout (cr);
+  // pango_layout_set_font_description (layout, font_description);
+  // pango_layout_set_text (layout, "Hello, world", -1);
+
+  // cairo_set_source_rgb (cr, 0.0, 0.0, 1.0);
+  // cairo_move_to (cr, 10.0, 50.0);
+  // pango_cairo_show_layout (cr, layout);
+
+  // g_object_unref (layout);
+  // pango_font_description_free (font_description);
+
 };
 
 

@@ -11,6 +11,7 @@
 #define __BOOKGAME_H
 
 #include <TooN/TooN.h>
+#include <pango/pangocairo.h>
 #include "OpenGL.h"
 #include "MLDriver.h"
 
