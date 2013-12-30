@@ -70,16 +70,35 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
 
   if (mbHasSummary)
   {
+
+    //this is to ensure proper scaling for different baseline sizes
+    double width = mdBaseline;
+
+    //Render histogram bars
     for (int i=0; i<5; i++)
       {
-	glLoadIdentity();
-	double width = mdBaseline;
 	double height = width*4*mpChapSummary->vTopWordFreqs[i];
-
+	glLoadIdentity();
 	glTranslatef(width*4 + i*1.5*width, 0.0f, width*(height/2));
 	glScaled(width, width, width*height);
-	glCallList(mnHistDisplayList[i]);
+	glCallList(mvHistDisplayList[i]);
       }
+
+    //Render histogram labels
+    for (int i=0; i<5; i++)
+      {
+    	glLoadIdentity();
+    	glTranslatef(width*(4) + width*(1.5)*i, width*(-2), 0.0f);
+    	glScaled(width/2, 2*width, 0.0f);
+    	glCallList(mvTextDisplayList[i]);
+      }
+
+    //Render summary
+    glLoadIdentity();
+    glTranslatef(width*(-8), 0.0f, 0.0f);
+    glScaled(4*width, 4*width, 0.0f);
+    glCallList(mnSummaryDisplayList);
+    
   }
 
   //Draw Shadows
@@ -101,29 +120,6 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
   glEnd();
   glDisable(GL_TEXTURE_2D);
   glDisable(GL_DEPTH_TEST);
-
-
-  // cairo_surface_t *surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, 240, 80);
-  // cairo_t *cr = cairo_create (surface);
-
-  // PangoLayout *layout;
-  // PangoFontDescription *font_description;
-
-  // font_description = pango_font_description_new ();
-  // pango_font_description_set_family (font_description, "serif");
-  // pango_font_description_set_weight (font_description, PANGO_WEIGHT_BOLD);
-  // pango_font_description_set_absolute_size (font_description, 32 * PANGO_SCALE);
-
-  // layout = pango_cairo_create_layout (cr);
-  // pango_layout_set_font_description (layout, font_description);
-  // pango_layout_set_text (layout, "Hello, world", -1);
-
-  // cairo_set_source_rgb (cr, 0.0, 0.0, 1.0);
-  // cairo_move_to (cr, 10.0, 50.0);
-  // pango_cairo_show_layout (cr, layout);
-
-  // g_object_unref (layout);
-  // pango_font_description_free (font_description);
 
 };
 
@@ -265,6 +261,19 @@ void BookGame::DrawCube(GLfloat size, GLenum type)
   }
 }
 
+void BookGame::DrawSquare(GLfloat size, GLenum type)
+{
+  glColor3f(0.15f, 0.15f, 0.15f); //Grey  
+  
+  glBegin(type);
+  glNormal3f(0.0f, 0.0f, size);
+  glVertex3f( size, size, 0);
+  glVertex3f(-size, size, 0);
+  glVertex3f(-size,-size, 0);
+  glVertex3f( size,-size, 0);
+  glEnd();
+}
+
 void BookGame::Init()
 {
   if(mbInitialised) return;
@@ -279,11 +288,25 @@ void BookGame::Init()
   // Set up the display list for the histogram
   for (int i=0; i<5; i++)
     {
-      mnHistDisplayList.push_back(glGenLists(1));
-      glNewList(mnHistDisplayList[i],GL_COMPILE);
+      mvHistDisplayList.push_back(glGenLists(1));
+      glNewList(mvHistDisplayList[i],GL_COMPILE);
       DrawCube(1.0f, GL_QUADS);
       glEndList();
     }
+
+  //Set up the display list for the histogram
+  for (int i=0; i<5; i++)
+    {
+      mvTextDisplayList.push_back(glGenLists(1));
+      glNewList(mvTextDisplayList[i],GL_COMPILE);
+      DrawSquare(1.0f, GL_QUADS);
+      glEndList();
+    }
+  
+  mnSummaryDisplayList = glGenLists(1);
+  glNewList(mnSummaryDisplayList,GL_COMPILE);
+  DrawSquare(1.0f, GL_QUADS);
+  glEndList();
 
   MakeShadowTex();
 };
