@@ -5,11 +5,11 @@
 # Or to change the compiler's optimization flags
 CC = g++
 
-PKG_INCLUDE = $(shell pkg-config --cflags pangocairo)
-COMPILEFLAGS = -g $(PKG_INCLUDE) -O3 -D_LINUX -D_REENTRANT -Wall -march=nocona -msse3
+#PKG_INCLUDE = $(shell pkg-config --cflags pangocairo)
+COMPILEFLAGS = -g -O3 -D_LINUX -D_REENTRANT -Wall -march=nocona -msse3
 
-PKG_LIBS = $(shell pkg-config --libs pangocairo)
-LINKFLAGS = -L -/usr/local/lib $(PKG_LIBS) -lGVars3 -lcvd -llapack -lblas -lopencv_core -lopencv_highgui -lopencv_imgproc 
+#PKG_LIBS = $(shell pkg-config --libs pangocairo)
+LINKFLAGS = -L -/usr/local/lib -lGVars3 -lcvd -llapack -lblas -lopencv_core -lopencv_highgui -lopencv_imgproc 
 
 # Edit this line to change video source
 VIDEOSOURCE = VideoSource_Linux_OpenCV.o
