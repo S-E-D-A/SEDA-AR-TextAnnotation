@@ -40,7 +40,7 @@ ARSummary* MLDriver::GetSummary(int nChapter)
 	maxfreq = freq;
     }
   for (int i=0; i<vStrings.size(); i++)
-      pChapSummary->vTopWordFreqs[i] /= maxfreq;
+    pChapSummary->vTopWordFreqs[i] /= maxfreq; //normalize to 1
 
   //Second line: top words
   vStrings = ParseLine(vLines[1]);

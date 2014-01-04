@@ -3,19 +3,18 @@
 #include <cvd/convolution.h>
 
 using namespace CVD;
+using namespace std;
 
 BookGame::BookGame()
 {
   mbInitialised = false;
-  mdBaseline = 0.1;
-  mdShadowHalfSize = 2.5 * mdBaseline;
+  mdScale = 0.1;
   mbHasSummary = false;
 }
 
-void BookGame::UpdateBaseline(double dBaseline)
+void BookGame::UpdateScale(double dScale)
 {
-  mdBaseline = dBaseline;
-  mdShadowHalfSize = 2.5 * mdBaseline;
+  //mdScale = dScale;
 }
 
 void BookGame::UpdateSummary(ARSummary* pChapSummary)
@@ -31,87 +30,67 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
     Init();
 
   mnFrameCounter++;
-  //glDisable(GL_BLEND);
-  //glEnable(GL_CULL_FACE);
-  glFrontFace(GL_CW);
-  glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LEQUAL);
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-  glEnable(GL_NORMALIZE);
-  glEnable(GL_COLOR_MATERIAL);
-
-  GLfloat af[4]; 
-  af[0]=0.5; af[1]=0.5; af[2]=0.5; af[3]=1.0;
-  glLightfv(GL_LIGHT0, GL_AMBIENT, af);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, af);
-  af[0]=1.0; af[1]=0.0; af[2]=1.0; af[3]=0.0;
-  glLightfv(GL_LIGHT0, GL_POSITION, af);
-  af[0]=1.0; af[1]=1.0; af[2]=1.0; af[3]=1.0;
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, af);
-  glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0);
   
-  glMatrixMode(GL_MODELVIEW);
-  
-  // //Translate, Rotate, Scale each Eyeball
-  // for(int i=0; i<4; i++)
-  //   {
-  //     if(mnFrameCounter < 100)
-  // 	LookAt(i, 500.0 * (Vector<3>) makeVector( (i<2?-1:1)*(mnFrameCounter < 50 ? -1 : 1) * -0.4 , -0.1, 1) , 0.05 );
-  //     else
-  // 	LookAt(i, v3CameraPos, 0.02 );
-      
-  //     glLoadIdentity();
-  //     glMultMatrix(ase3WorldFromEye[i]);
-  //     glScaled(mdBaseline, mdBaseline, mdBaseline);
-  //     glCallList(mnEyeDisplayList);
-  //   }
-  // glDisable(GL_CULL_FACE);
-
   if (mbHasSummary)
   {
-
-    //this is to ensure proper scaling for different baseline sizes
-    double width = mdBaseline;
-
+    //Lighting Effects
+    glFrontFace(GL_CW);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_NORMALIZE);
+    glEnable(GL_COLOR_MATERIAL);
+    GLfloat af[4]; 
+    af[0]=0.5; af[1]=0.5; af[2]=0.5; af[3]=1.0;
+    glLightfv(GL_LIGHT0, GL_AMBIENT, af);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, af);
+    af[0]=1.0; af[1]=0.0; af[2]=1.0; af[3]=0.0;
+    glLightfv(GL_LIGHT0, GL_POSITION, af);
+    af[0]=1.0; af[1]=1.0; af[2]=1.0; af[3]=1.0;
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, af);
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0);
+  
+    glMatrixMode(GL_MODELVIEW);
+    glColor3f(0.15f, 0.15f, 0.15f); //Grey
+    
     //Render histogram bars
     for (int i=0; i<5; i++)
       {
-	double height = width*4*mpChapSummary->vTopWordFreqs[i];
+	double dHeight = mpChapSummary->vTopWordFreqs[i];
 	glLoadIdentity();
-	glColor3f(0.15f, 0.15f, 0.15f); //Grey
-	glTranslatef(width*4 + i*1.5*width, 0.0f, width*(height/2));
-	glScaled(width, width, width*height);
+	glScaled(mdScale, mdScale, mdScale);
+	glTranslatef(8.0f + 1.5f*i, 0.0f, 5*(dHeight/2));
+
+	glScaled(1.0f, 1.0f, 5*dHeight);
 	glCallList(mvHistDisplayList[i]);
       }
-
-    glDisable(GL_LIGHTING);
 
     //Render histogram labels
     for (int i=0; i<5; i++)
       {
-	glLoadIdentity();
-	glTranslatef(width*(4) + width*(1.5)*i, width*(-2), 0.0f);
-    	glScaled(width/2, 2*width, 0.0f);
-	glColor3f(0.15f, 0.15f, 0.15f); //Grey
-	glTranslatef(-0.5f, 0.5f, 0.0f);
-    	glScaled(1.0f, 0.25f, 0.0f);
-	glRotated(-90,0,0,1);
-	glDrawText("Gandolf");
+	string sWord = mpChapSummary->vTopWords[i];
+    	glLoadIdentity();
+	glScaled(mdScale, mdScale, mdScale);
+	glTranslatef(8.0f + 1.5f*i, 0.0f, 0.0f);
+
+	glTranslatef(-0.25f, -0.75f, 0.0f);
+	glRotated(-90, 0, 0, 1);
+	glScalef(0.5f, 0.5f, 0.5f);
+    	glDrawText(sWord);
       }
 
     //Render summary
     glLoadIdentity();
-    glColor3f(0.15f, 0.15f, 0.15f); //Grey    
-    //glScaled(width, width/4, 0.0f);
-    glScaled(width, width, 0.0f);
-    glTranslatef(width*(-150), 0.0f, 0.0f);
+    glScaled(mdScale, mdScale, 0.0f);
+    glTranslatef(-12, 0.0f, 0.0f);
     glDrawText("TEST TEST");
-    glTranslatef(0.0f, width*(-20), 0.0f);    
+    glTranslatef(0.0f, -1.5, 0.0f);    
     glDrawText("Hj Tack");
     
   }
 
+  glDisable(GL_LIGHTING);
   glDisable(GL_DEPTH_TEST);
 
 };
@@ -119,23 +98,6 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
 
 void BookGame::Reset()
 {
-  for(int i=0; i<4; i++)
-    ase3WorldFromEye[i] = SE3<>();
-
-  ase3WorldFromEye[0].get_translation()[0] = -mdBaseline;
-  ase3WorldFromEye[1].get_translation()[0] = mdBaseline;
-  ase3WorldFromEye[2].get_translation()[0] = -mdBaseline;
-  ase3WorldFromEye[3].get_translation()[0] = mdBaseline;
-
-  ase3WorldFromEye[0].get_translation()[1] = -mdBaseline;
-  ase3WorldFromEye[1].get_translation()[1] = -mdBaseline;
-  ase3WorldFromEye[2].get_translation()[1] = mdBaseline;
-  ase3WorldFromEye[3].get_translation()[1] = mdBaseline;
-
-  ase3WorldFromEye[0].get_translation()[2] = mdBaseline;
-  ase3WorldFromEye[1].get_translation()[2] = mdBaseline;
-  ase3WorldFromEye[2].get_translation()[2] = mdBaseline;
-  ase3WorldFromEye[3].get_translation()[2] = mdBaseline;
   mnFrameCounter = 0;
 };
 
@@ -204,20 +166,6 @@ void BookGame::Init()
       DrawCube(1.0f, GL_QUADS);
       glEndList();
     }
-
-  // //Set up the display list for the histogram
-  // for (int i=0; i<5; i++)
-  //   {
-  //     mvTextDisplayList.push_back(glGenLists(1));
-  //     glNewList(mvTextDisplayList[i],GL_COMPILE);
-  //     DrawSquare(1.0f, GL_QUADS);
-  //     glEndList();
-  //   }
-  
-  // mnSummaryDisplayList = glGenLists(1);
-  // glNewList(mnSummaryDisplayList,GL_COMPILE);
-  // DrawSquare(1.0f, GL_QUADS);
-  // glEndList();
 
   glSetFont("sans");
 

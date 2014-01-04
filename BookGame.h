@@ -20,7 +20,7 @@ class BookGame
 {
  public:
   BookGame();
-  void UpdateBaseline(double mdBaseline);
+  void UpdateScale(double dScale);
   void UpdateSummary(ARSummary* pChapSummary);
   void DrawStuff(Vector<3> v3CameraPos);
   void Reset();
@@ -28,20 +28,11 @@ class BookGame
 
  protected:
   bool mbInitialised;
-  //void DrawEye();
   void DrawCube(GLfloat size, GLenum type);
   void DrawSquare(GLfloat size, GLenum type);
-  //void LookAt(int nEye, Vector<3> v3, double dRotLimit);
-  //void MakeShadowTex();
- 
-  //GLuint mnEyeDisplayList;
+
   std::vector<GLuint> mvHistDisplayList;
-  //std::vector<GLuint> mvTextDisplayList;
-  //GLuint mnSummaryDisplayList;
-  //GLuint mnShadowTex;
-  double mdBaseline;
-  double mdShadowHalfSize;
-  SE3<> ase3WorldFromEye[4];
+  double mdScale;
   int mnFrameCounter;
 
   bool mbHasSummary;
