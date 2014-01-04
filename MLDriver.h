@@ -12,7 +12,7 @@
 
 struct ARSummary
 {
-  std::vector<int> vTopWordFreqs;
+  std::vector<double> vTopWordFreqs;
   std::vector<std::string> vTopWords;
   int nNumSumWords;
   std::vector<std::string> vSummary;

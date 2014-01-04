@@ -30,8 +30,17 @@ ARSummary* MLDriver::GetSummary(int nChapter)
 
   //First line: top word frequencies
   vStrings = ParseLine(vLines[0]);
+  double maxfreq = 0;
+  double freq;
   for (int i=0; i<vStrings.size(); i++)
-    pChapSummary->vTopWordFreqs.push_back(atoi(vStrings[i].c_str()));
+    {
+      freq = atoi(vStrings[i].c_str());
+      pChapSummary->vTopWordFreqs.push_back(freq);
+      if (freq > maxfreq)
+	maxfreq = freq;
+    }
+  for (int i=0; i<vStrings.size(); i++)
+      pChapSummary->vTopWordFreqs[i] /= maxfreq;
 
   //Second line: top words
   vStrings = ParseLine(vLines[1]);
