@@ -31,8 +31,8 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
     Init();
 
   mnFrameCounter++;
-  glDisable(GL_BLEND);
-  glEnable(GL_CULL_FACE);
+  //glDisable(GL_BLEND);
+  //glEnable(GL_CULL_FACE);
   glFrontFace(GL_CW);
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
@@ -53,20 +53,20 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
   
   glMatrixMode(GL_MODELVIEW);
   
-  //Translate, Rotate, Scale each Eyeball
-  for(int i=0; i<4; i++)
-    {
-      if(mnFrameCounter < 100)
-	LookAt(i, 500.0 * (Vector<3>) makeVector( (i<2?-1:1)*(mnFrameCounter < 50 ? -1 : 1) * -0.4 , -0.1, 1) , 0.05 );
-      else
-	LookAt(i, v3CameraPos, 0.02 );
+  // //Translate, Rotate, Scale each Eyeball
+  // for(int i=0; i<4; i++)
+  //   {
+  //     if(mnFrameCounter < 100)
+  // 	LookAt(i, 500.0 * (Vector<3>) makeVector( (i<2?-1:1)*(mnFrameCounter < 50 ? -1 : 1) * -0.4 , -0.1, 1) , 0.05 );
+  //     else
+  // 	LookAt(i, v3CameraPos, 0.02 );
       
-      glLoadIdentity();
-      glMultMatrix(ase3WorldFromEye[i]);
-      glScaled(mdBaseline, mdBaseline, mdBaseline);
-      glCallList(mnEyeDisplayList);
-    }
-  glDisable(GL_CULL_FACE);
+  //     glLoadIdentity();
+  //     glMultMatrix(ase3WorldFromEye[i]);
+  //     glScaled(mdBaseline, mdBaseline, mdBaseline);
+  //     glCallList(mnEyeDisplayList);
+  //   }
+  // glDisable(GL_CULL_FACE);
 
   if (mbHasSummary)
   {
@@ -79,46 +79,39 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
       {
 	double height = width*4*mpChapSummary->vTopWordFreqs[i];
 	glLoadIdentity();
+	glColor3f(0.15f, 0.15f, 0.15f); //Grey
 	glTranslatef(width*4 + i*1.5*width, 0.0f, width*(height/2));
 	glScaled(width, width, width*height);
 	glCallList(mvHistDisplayList[i]);
       }
 
+    glDisable(GL_LIGHTING);
+
     //Render histogram labels
     for (int i=0; i<5; i++)
       {
-    	glLoadIdentity();
-    	glTranslatef(width*(4) + width*(1.5)*i, width*(-2), 0.0f);
+	glLoadIdentity();
+	glTranslatef(width*(4) + width*(1.5)*i, width*(-2), 0.0f);
     	glScaled(width/2, 2*width, 0.0f);
-    	glCallList(mvTextDisplayList[i]);
+	glColor3f(0.15f, 0.15f, 0.15f); //Grey
+	glTranslatef(-0.5f, 0.5f, 0.0f);
+    	glScaled(1.0f, 0.25f, 0.0f);
+	glRotated(-90,0,0,1);
+	glDrawText("Gandolf");
       }
 
     //Render summary
     glLoadIdentity();
-    glTranslatef(width*(-8), 0.0f, 0.0f);
-    glScaled(4*width, 4*width, 0.0f);
-    glCallList(mnSummaryDisplayList);
+    glColor3f(0.15f, 0.15f, 0.15f); //Grey    
+    //glScaled(width, width/4, 0.0f);
+    glScaled(width, width, 0.0f);
+    glTranslatef(width*(-150), 0.0f, 0.0f);
+    glDrawText("TEST TEST");
+    glTranslatef(0.0f, width*(-20), 0.0f);    
+    glDrawText("Hj Tack");
     
   }
 
-  //Draw Shadows
-  glDisable(GL_LIGHTING);
-  glLoadIdentity();
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, mnShadowTex);
-  glEnable(GL_BLEND);
-  glColor4f(0,0,0,0.5);
-  glBegin(GL_QUADS);
-  glTexCoord2f(0,0);
-  glVertex2d(-mdShadowHalfSize, -mdShadowHalfSize);
-  glTexCoord2f(0,1);
-  glVertex2d(-mdShadowHalfSize,  mdShadowHalfSize);
-  glTexCoord2f(1,1);
-  glVertex2d( mdShadowHalfSize,  mdShadowHalfSize);
-  glTexCoord2f(1,0);
-  glVertex2d( mdShadowHalfSize, -mdShadowHalfSize);
-  glEnd();
-  glDisable(GL_TEXTURE_2D);
   glDisable(GL_DEPTH_TEST);
 
 };
@@ -146,82 +139,8 @@ void BookGame::Reset()
   mnFrameCounter = 0;
 };
 
-
-void BookGame::DrawEye()
-{
-  int nSegments = 45;
-  int nSlices = 45;
-  
-  double dSliceAngle = M_PI / (double)(nSlices);
-  double dSegAngle = 2.0 * M_PI / (double)(nSegments);
-  
-  glColor3f(0.0,0.0,0.0);
-  {  // North pole:
-    double Z = sin(M_PI/2.0 - dSliceAngle);
-    double R = cos(M_PI/2.0 - dSliceAngle);
-    glBegin(GL_TRIANGLE_FAN);
-    glNormal3f(0,0,1);
-    glVertex3f(0,0,1);
-    for(int i=0; i<nSegments;i++)
-      {
-	glNormal3f(R * sin((double)i * dSegAngle), R * cos((double)i * dSegAngle),  Z);
-	glVertex3f(R * sin((double)i * dSegAngle), R * cos((double)i * dSegAngle),  Z);
-      }
-    glNormal3f(0,R,Z);
-    glVertex3f(0,R,Z);
-    glEnd();
-  }
-  
-  int nBlueSlice = 3;
-  int nWhiteSlice = 6;
-  for(int j = 1; j<nSlices;j++)
-    {
-      if(j == nBlueSlice)
-	glColor3f(0,0,1);
-      if(j == nWhiteSlice)
-	glColor4d(0.92, 0.9, 0.85,1);
-      
-      glBegin(GL_QUAD_STRIP);
-      double zTop = sin(M_PI/2.0 - dSliceAngle * (double)j);
-      double zBot = sin(M_PI/2.0 - dSliceAngle * (double)(j+1));
-      double rTop = cos(M_PI/2.0 - dSliceAngle * (double)j);
-      double rBot = cos(M_PI/2.0 - dSliceAngle * (double)(j+1));
-      for(int i=0; i<nSegments;i++)
-	{
-	  glNormal3f(rTop*sin((double)i*dSegAngle), rTop*cos((double)i*dSegAngle), zTop);
-	  glVertex3f(rTop*sin((double)i*dSegAngle), rTop*cos((double)i*dSegAngle), zTop);
-	  glNormal3f(rBot*sin((double)i*dSegAngle), rBot*cos((double)i*dSegAngle), zBot);
-	  glVertex3f(rBot*sin((double)i*dSegAngle), rBot*cos((double)i*dSegAngle), zBot);
-	};
-      glNormal3f(0,rTop, zTop);
-      glVertex3f(0,rTop, zTop);
-      glNormal3f(0,rBot, zBot);
-      glVertex3f(0,rBot, zBot);
-      glEnd();
-    };
-
-  {
-    // South pole:
-    double Z = sin(M_PI/2.0 - dSliceAngle);
-    double R = cos(M_PI/2.0 - dSliceAngle);
-    glBegin(GL_TRIANGLE_FAN);
-    glNormal3f(0,0,-1);
-    glVertex3f(0,0,-1);
-    for(int i=0; i<nSegments;i++)
-      {
-	glNormal3f(R * sin((double)i * -dSegAngle), R * cos((double)i * -dSegAngle),  -Z);
-	glVertex3f(R * sin((double)i * -dSegAngle), R * cos((double)i * -dSegAngle),  -Z);
-      }
-    glNormal3f(0,R,-Z);
-    glVertex3f(0,R,-Z);
-    glEnd();
-  };
-
-}
-
 void BookGame::DrawCube(GLfloat size, GLenum type)
 {
-  glColor3f(0.15f, 0.15f, 0.15f); //Grey
   static GLfloat n[6][3] =
     {
       {-1.0, 0.0, 0.0},
@@ -263,8 +182,6 @@ void BookGame::DrawCube(GLfloat size, GLenum type)
 
 void BookGame::DrawSquare(GLfloat size, GLenum type)
 {
-  glColor3f(0.15f, 0.15f, 0.15f); //Grey  
-  
   glBegin(type);
   glNormal3f(0.0f, 0.0f, size);
   glVertex3f( size, size, 0);
@@ -279,12 +196,6 @@ void BookGame::Init()
   if(mbInitialised) return;
   mbInitialised = true;
 
-  // Set up the display list for the eyeball.
-  mnEyeDisplayList = glGenLists(1);
-  glNewList(mnEyeDisplayList,GL_COMPILE);
-  DrawEye();
-  glEndList();
-
   // Set up the display list for the histogram
   for (int i=0; i<5; i++)
     {
@@ -294,81 +205,22 @@ void BookGame::Init()
       glEndList();
     }
 
-  //Set up the display list for the histogram
-  for (int i=0; i<5; i++)
-    {
-      mvTextDisplayList.push_back(glGenLists(1));
-      glNewList(mvTextDisplayList[i],GL_COMPILE);
-      DrawSquare(1.0f, GL_QUADS);
-      glEndList();
-    }
+  // //Set up the display list for the histogram
+  // for (int i=0; i<5; i++)
+  //   {
+  //     mvTextDisplayList.push_back(glGenLists(1));
+  //     glNewList(mvTextDisplayList[i],GL_COMPILE);
+  //     DrawSquare(1.0f, GL_QUADS);
+  //     glEndList();
+  //   }
   
-  mnSummaryDisplayList = glGenLists(1);
-  glNewList(mnSummaryDisplayList,GL_COMPILE);
-  DrawSquare(1.0f, GL_QUADS);
-  glEndList();
+  // mnSummaryDisplayList = glGenLists(1);
+  // glNewList(mnSummaryDisplayList,GL_COMPILE);
+  // DrawSquare(1.0f, GL_QUADS);
+  // glEndList();
 
-  MakeShadowTex();
+  glSetFont("sans");
+
 };
-
-
-void BookGame::LookAt(int nEye, Vector<3> v3, double dRotLimit)
-{
-  Vector<3> v3E = ase3WorldFromEye[nEye].inverse() * v3;
-  if(v3E * v3E == 0.0)
-    return;
-  
-  normalize(v3E);
-  Matrix<3> m3Rot = Identity;
-  m3Rot[2] = v3E;
-  m3Rot[0] -= m3Rot[2]*(m3Rot[0]*m3Rot[2]); 
-  normalize(m3Rot[0]);
-  m3Rot[1] = m3Rot[2] ^ m3Rot[0];
-  
-  SO3<> so3Rotator = m3Rot;
-  Vector<3> v3Log = so3Rotator.ln();
-  v3Log[2] = 0.0;
-  double dMagn = sqrt(v3Log * v3Log);
-  if(dMagn > dRotLimit)
-    {
-      v3Log = v3Log * ( dRotLimit / dMagn);
-    }
-  ase3WorldFromEye[nEye].get_rotation() = ase3WorldFromEye[nEye].get_rotation() * SO3<>::exp(-v3Log);
-};
-
-void BookGame::MakeShadowTex()
-{
-  const int nTexSize = 256;
-  Image<byte> imShadow(ImageRef(nTexSize, nTexSize));
-  double dFrac = 1.0 - mdBaseline / mdShadowHalfSize;
-  double dCenterPos = dFrac * nTexSize / 2 - 0.5;
-  ImageRef irCenter; irCenter.x = irCenter.y = (int) dCenterPos;
-  int nRadius = int ((nTexSize / 2 - irCenter.x) * 1.05);
-  unsigned int nRadiusSquared = nRadius*nRadius;
-  ImageRef ir;
-  for(ir.y = 0; 2 * ir.y < nTexSize; ir.y++)
-    for(ir.x = 0; 2 * ir.x < nTexSize; ir.x++)
-      {
-	byte val = 0;
-	if((ir - irCenter).mag_squared() < nRadiusSquared)
-	  val = 255;
-	imShadow[ir] = val;
-	imShadow[ImageRef(nTexSize - 1 - ir.x, ir.y)] = val;
-	imShadow[ImageRef(nTexSize - 1 - ir.x, nTexSize - 1 - ir.y)] = val;
-	imShadow[ImageRef(ir.x, nTexSize - 1 - ir.y)] = val;
-      }
-  
-  convolveGaussian(imShadow, 4.0);
-  glGenTextures(1, &mnShadowTex);
-  glBindTexture(GL_TEXTURE_2D,mnShadowTex);
-  glTexImage2D(GL_TEXTURE_2D, 0, 
-	       GL_ALPHA, nTexSize, nTexSize, 0, 
-	       GL_ALPHA, GL_UNSIGNED_BYTE, imShadow.data()); 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-};
-
-
-
 
 
