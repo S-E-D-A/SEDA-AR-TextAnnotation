@@ -10,6 +10,7 @@
 #ifndef __BOOKGAME_H
 #define __BOOKGAME_H
 
+#include <cmath>
 #include <TooN/TooN.h>
 #include "OpenGL.h"
 #include "MLDriver.h"

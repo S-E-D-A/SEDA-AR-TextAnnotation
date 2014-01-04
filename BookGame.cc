@@ -81,13 +81,21 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
       }
 
     //Render summary
+    string sLine = "";
+    for (int i=0; i < ceil(mpChapSummary->nNumSumWords/5); i++) //row counter
+      {
+	for (int j=0; j < 5; j++)
+	  {
+	    sLine+=mpChapSummary->vSummary[i*5+j];
+	    sLine+=" ";
+	  }
+	sLine+="\n";
+      }
     glLoadIdentity();
     glScaled(mdScale, mdScale, 0.0f);
-    glTranslatef(-12, 0.0f, 0.0f);
-    glDrawText("TEST TEST");
-    glTranslatef(0.0f, -1.5, 0.0f);    
-    glDrawText("Hj Tack");
-    
+    glScaled(0.5f, 0.5f, 0.0f);
+    glTranslatef(-40, 10.0f, 0.0f);
+    glDrawText(sLine);
   }
 
   glDisable(GL_LIGHTING);
