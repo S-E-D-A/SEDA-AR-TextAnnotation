@@ -10,6 +10,7 @@ BookGame::BookGame()
   mbInitialised = false;
   mdScale = 0.1;
   mbHasSummary = false;
+  mnWordsPerLine = 4;
 }
 
 void BookGame::Reset()
@@ -49,23 +50,23 @@ void BookGame::UpdateSummary(ARSummary* pChapSummary)
     }
 
   //Generate DisplayList for current summary
+  int nSummaryLength = mpChapSummary->nNumSumWords;
   string sParagraph = "";
-  for (int i=0; i < ceil(mpChapSummary->nNumSumWords/5); i++) //row counter
+  for (int i=0; i < ceil((mpChapSummary->nNumSumWords)/mnWordsPerLine); i++) //row counter
     {
-      for (int j=0; j < 5; j++)
+      for (int j=0; j < mnWordsPerLine; j++)
 	{
-	  sParagraph+=mpChapSummary->vSummary[i*5+j];
+	  if (i*mnWordsPerLine+j >= nSummaryLength)
+	    break;
+	  sParagraph+=mpChapSummary->vSummary[i*mnWordsPerLine+j];
 	  sParagraph+=" ";
 	}
       sParagraph+="\n";
     }
   mnSummaryDisplayList = glGenLists(1);
-  for (int i=0; i<5; i++)
-    {
-      glNewList(mnSummaryDisplayList+i, GL_COMPILE);
-      DrawString(sParagraph);
-      glEndList();
-    }
+  glNewList(mnSummaryDisplayList, GL_COMPILE);
+  DrawString(sParagraph);
+  glEndList();
 
   mnSummaryCounter++;
 
