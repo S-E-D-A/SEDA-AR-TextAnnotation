@@ -45,7 +45,7 @@ void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
     };
 
   mdBaseline = GV3::get<double>("MapMaker.Baseline");
-  mpGame->UpdateBaseline(mdBaseline);
+  mpGame->UpdateScale(mdBaseline);
 
   mnCounter++;
   

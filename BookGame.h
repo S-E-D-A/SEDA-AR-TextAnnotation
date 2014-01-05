@@ -10,8 +10,8 @@
 #ifndef __BOOKGAME_H
 #define __BOOKGAME_H
 
+#include <cmath>
 #include <TooN/TooN.h>
-#include <pango/pangocairo.h>
 #include "OpenGL.h"
 #include "MLDriver.h"
 
@@ -21,7 +21,7 @@ class BookGame
 {
  public:
   BookGame();
-  void UpdateBaseline(double mdBaseline);
+  void UpdateScale(double dScale);
   void UpdateSummary(ARSummary* pChapSummary);
   void DrawStuff(Vector<3> v3CameraPos);
   void Reset();
@@ -29,21 +29,18 @@ class BookGame
 
  protected:
   bool mbInitialised;
-  void DrawEye();
   void DrawCube(GLfloat size, GLenum type);
-  void DrawSquare(GLfloat size, GLenum type);
-  void LookAt(int nEye, Vector<3> v3, double dRotLimit);
-  void MakeShadowTex();
- 
-  GLuint mnEyeDisplayList;
+  void DrawString(std::string sWord);
+
   std::vector<GLuint> mvHistDisplayList;
-  std::vector<GLuint> mvTextDisplayList;
+  GLuint mnPrevLabelDisplayList;
+  GLuint mnLabelDisplayList;
+  GLuint mnPrevSummaryDisplayList;
   GLuint mnSummaryDisplayList;
-  GLuint mnShadowTex;
-  double mdBaseline;
-  double mdShadowHalfSize;
-  SE3<> ase3WorldFromEye[4];
+  double mdScale;
   int mnFrameCounter;
+  int mnSummaryCounter;
+  int mnWordsPerLine;
 
   bool mbHasSummary;
   ARSummary* mpChapSummary;
