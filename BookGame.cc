@@ -178,17 +178,6 @@ void BookGame::DrawCube(GLfloat size, GLenum type)
   }
 }
 
-void BookGame::DrawSquare(GLfloat size, GLenum type)
-{
-  glBegin(type);
-  glNormal3f(0.0f, 0.0f, size);
-  glVertex3f( size, size, 0);
-  glVertex3f(-size, size, 0);
-  glVertex3f(-size,-size, 0);
-  glVertex3f( size,-size, 0);
-  glEnd();
-}
-
 void BookGame::DrawString(string sWord)
 {
   glDrawText(sWord);

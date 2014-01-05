@@ -30,7 +30,6 @@ class BookGame
  protected:
   bool mbInitialised;
   void DrawCube(GLfloat size, GLenum type);
-  void DrawSquare(GLfloat size, GLenum type);
   void DrawString(std::string sWord);
 
   std::vector<GLuint> mvHistDisplayList;
