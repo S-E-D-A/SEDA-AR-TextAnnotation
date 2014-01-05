@@ -29,18 +29,41 @@ void BookGame::UpdateSummary(ARSummary* pChapSummary)
   mpChapSummary = pChapSummary;
   // delete pChapSummary;
 
+  //Delete previous label+summary
   if (mnSummaryCounter != 0)
     {
       mnPrevLabelDisplayList = mnLabelDisplayList;
       glDeleteLists(mnPrevLabelDisplayList,5);
+
+      mnPrevSummaryDisplayList = mnSummaryDisplayList;
+      glDeleteLists(mnPrevSummaryDisplayList,1);
     }
 
-
+  //Generate DisplayList for current labels
   mnLabelDisplayList = glGenLists(5);
   for (int i=0; i<5; i++)
     {
       glNewList(mnLabelDisplayList+i, GL_COMPILE);
-      DrawLabel(mpChapSummary->vTopWords[i]);
+      DrawString(mpChapSummary->vTopWords[i]);
+      glEndList();
+    }
+
+  //Generate DisplayList for current summary
+  string sParagraph = "";
+  for (int i=0; i < ceil(mpChapSummary->nNumSumWords/5); i++) //row counter
+    {
+      for (int j=0; j < 5; j++)
+	{
+	  sParagraph+=mpChapSummary->vSummary[i*5+j];
+	  sParagraph+=" ";
+	}
+      sParagraph+="\n";
+    }
+  mnSummaryDisplayList = glGenLists(1);
+  for (int i=0; i<5; i++)
+    {
+      glNewList(mnSummaryDisplayList+i, GL_COMPILE);
+      DrawString(sParagraph);
       glEndList();
     }
 
@@ -85,7 +108,6 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
 	glLoadIdentity();
 	glScaled(mdScale, mdScale, mdScale);
 	glTranslatef(8.0f + 1.5f*i, 0.0f, 5*(dHeight/2));
-
 	glScaled(1.0f, 1.0f, 5*dHeight);
 	glCallList(mvHistDisplayList[i]);
       }
@@ -93,11 +115,9 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
     //Render histogram labels
     for (int i=0; i<5; i++)
       {
-	//string sWord = mpChapSummary->vTopWords[i];
     	glLoadIdentity();
 	glScaled(mdScale, mdScale, mdScale);
 	glTranslatef(8.0f + 1.5f*i, 0.0f, 0.0f);
-
 	glTranslatef(-0.25f, -0.75f, 0.0f);
 	glRotated(-90, 0, 0, 1);
 	glScalef(0.5f, 0.5f, 0.5f);
@@ -105,21 +125,11 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
       }	
 
     //Render summary
-    // string sLine = "";
-    // for (int i=0; i < ceil(mpChapSummary->nNumSumWords/5); i++) //row counter
-    //   {
-    // 	for (int j=0; j < 5; j++)
-    // 	  {
-    // 	    sLine+=mpChapSummary->vSummary[i*5+j];
-    // 	    sLine+=" ";
-    // 	  }
-    // 	sLine+="\n";
-    //   }
-    // glLoadIdentity();
-    // glScaled(mdScale, mdScale, 0.0f);
-    // glScaled(0.5f, 0.5f, 0.0f);
-    // glTranslatef(-40, 10.0f, 0.0f);
-    // glDrawText(sLine);
+    glLoadIdentity();
+    glScaled(mdScale, mdScale, 0.0f);
+    glScaled(0.5f, 0.5f, 0.0f);
+    glTranslatef(-40, 10.0f, 0.0f);
+    glCallList(mnSummaryDisplayList);
   }
 
   glDisable(GL_LIGHTING);
@@ -179,7 +189,7 @@ void BookGame::DrawSquare(GLfloat size, GLenum type)
   glEnd();
 }
 
-void BookGame::DrawLabel(string sWord)
+void BookGame::DrawString(string sWord)
 {
   glDrawText(sWord);
 }
