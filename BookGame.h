@@ -31,10 +31,14 @@ class BookGame
   bool mbInitialised;
   void DrawCube(GLfloat size, GLenum type);
   void DrawSquare(GLfloat size, GLenum type);
+  void DrawLabel(std::string sWord);
 
   std::vector<GLuint> mvHistDisplayList;
+  GLuint mnPrevLabelDisplayList;
+  GLuint mnLabelDisplayList;
   double mdScale;
   int mnFrameCounter;
+  int mnSummaryCounter;
 
   bool mbHasSummary;
   ARSummary* mpChapSummary;

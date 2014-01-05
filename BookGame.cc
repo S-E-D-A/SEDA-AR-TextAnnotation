@@ -12,6 +12,12 @@ BookGame::BookGame()
   mbHasSummary = false;
 }
 
+void BookGame::Reset()
+{
+  mnFrameCounter = 0;
+  mnSummaryCounter = 0;
+}
+
 void BookGame::UpdateScale(double dScale)
 {
   //mdScale = dScale;
@@ -22,6 +28,24 @@ void BookGame::UpdateSummary(ARSummary* pChapSummary)
   mbHasSummary = true;
   mpChapSummary = pChapSummary;
   // delete pChapSummary;
+
+  if (mnSummaryCounter != 0)
+    {
+      mnPrevLabelDisplayList = mnLabelDisplayList;
+      glDeleteLists(mnPrevLabelDisplayList,5);
+    }
+
+
+  mnLabelDisplayList = glGenLists(5);
+  for (int i=0; i<5; i++)
+    {
+      glNewList(mnLabelDisplayList+i, GL_COMPILE);
+      DrawLabel(mpChapSummary->vTopWords[i]);
+      glEndList();
+    }
+
+  mnSummaryCounter++;
+
 }
 
 void BookGame::DrawStuff(Vector<3> v3CameraPos)
@@ -69,7 +93,7 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
     //Render histogram labels
     for (int i=0; i<5; i++)
       {
-	string sWord = mpChapSummary->vTopWords[i];
+	//string sWord = mpChapSummary->vTopWords[i];
     	glLoadIdentity();
 	glScaled(mdScale, mdScale, mdScale);
 	glTranslatef(8.0f + 1.5f*i, 0.0f, 0.0f);
@@ -77,36 +101,30 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
 	glTranslatef(-0.25f, -0.75f, 0.0f);
 	glRotated(-90, 0, 0, 1);
 	glScalef(0.5f, 0.5f, 0.5f);
-    	glDrawText(sWord);
-      }
+	glCallList(mnLabelDisplayList+i);
+      }	
 
     //Render summary
-    string sLine = "";
-    for (int i=0; i < ceil(mpChapSummary->nNumSumWords/5); i++) //row counter
-      {
-	for (int j=0; j < 5; j++)
-	  {
-	    sLine+=mpChapSummary->vSummary[i*5+j];
-	    sLine+=" ";
-	  }
-	sLine+="\n";
-      }
-    glLoadIdentity();
-    glScaled(mdScale, mdScale, 0.0f);
-    glScaled(0.5f, 0.5f, 0.0f);
-    glTranslatef(-40, 10.0f, 0.0f);
-    glDrawText(sLine);
+    // string sLine = "";
+    // for (int i=0; i < ceil(mpChapSummary->nNumSumWords/5); i++) //row counter
+    //   {
+    // 	for (int j=0; j < 5; j++)
+    // 	  {
+    // 	    sLine+=mpChapSummary->vSummary[i*5+j];
+    // 	    sLine+=" ";
+    // 	  }
+    // 	sLine+="\n";
+    //   }
+    // glLoadIdentity();
+    // glScaled(mdScale, mdScale, 0.0f);
+    // glScaled(0.5f, 0.5f, 0.0f);
+    // glTranslatef(-40, 10.0f, 0.0f);
+    // glDrawText(sLine);
   }
 
   glDisable(GL_LIGHTING);
   glDisable(GL_DEPTH_TEST);
 
-};
-
-
-void BookGame::Reset()
-{
-  mnFrameCounter = 0;
 };
 
 void BookGame::DrawCube(GLfloat size, GLenum type)
@@ -159,6 +177,11 @@ void BookGame::DrawSquare(GLfloat size, GLenum type)
   glVertex3f(-size,-size, 0);
   glVertex3f( size,-size, 0);
   glEnd();
+}
+
+void BookGame::DrawLabel(string sWord)
+{
+  glDrawText(sWord);
 }
 
 void BookGame::Init()
