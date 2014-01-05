@@ -129,7 +129,7 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
     glLoadIdentity();
     glScaled(mdScale, mdScale, 0.0f);
     glScaled(0.5f, 0.5f, 0.0f);
-    glTranslatef(-40, 10.0f, 0.0f);
+    glTranslatef(-35, 10.0f, 0.0f);
     glCallList(mnSummaryDisplayList);
   }
 
