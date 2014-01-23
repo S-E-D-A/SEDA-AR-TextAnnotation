@@ -35,6 +35,7 @@ private:
   VideoSource mVideoSource;
   GLWindow2 mGLWindow;
   CVD::Image<CVD::Rgb<CVD::byte> > mimFrameRGB;
+  CVD::Image<CVD::Rgb<CVD::byte> > mimFrameFull;
   CVD::Image<CVD::byte> mimFrameBW;
   
   Map *mpMap; 

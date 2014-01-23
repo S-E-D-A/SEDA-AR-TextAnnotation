@@ -23,6 +23,7 @@ System::System()
   
   mimFrameBW.resize(mVideoSource.Size());
   mimFrameRGB.resize(mVideoSource.Size());
+  mimFrameFull.resize(mVideoSource.FullSize());
   // First, check if the camera is calibrated.
   // If not, we need to run the calibration widget.
   Vector<NUMTRACKERCAMPARAMETERS> vTest;
@@ -71,7 +72,7 @@ void System::Run()
       // and one RGB, for drawing.
 
       // Grab new video frame...
-      mVideoSource.GetAndFillFrameBWandRGB(mimFrameBW, mimFrameRGB);
+      mVideoSource.GetAndFillFrameBWandRGB(mimFrameBW, mimFrameRGB, mimFrameFull);
       mnFrame++;
       static bool bFirstFrame = true;
       if(bFirstFrame)

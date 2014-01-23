@@ -101,6 +101,7 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
   
     glMatrixMode(GL_MODELVIEW);
     glColor3f(0.15f, 0.15f, 0.15f); //Grey
+    //glColor3f(1.0f, 0.15f, 1.0f); //Grey
     
     //Render histogram bars
     for (int i=0; i<5; i++)

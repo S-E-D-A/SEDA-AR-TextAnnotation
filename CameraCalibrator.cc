@@ -77,11 +77,12 @@ void CameraCalibrator::Run()
       // One black and white (for processing by the tracker etc)
       // and one RGB, for drawing.
       
-      Image<Rgb<byte> > imFrameRGB(mVideoSource.Size());
-      Image<byte>  imFrameBW(mVideoSource.Size());
+		Image<Rgb<byte> > imFrameFull(mVideoSource.FullSize());
+		Image<Rgb<byte> > imFrameRGB(mVideoSource.Size());
+		Image<byte>  imFrameBW(mVideoSource.Size());
       
       // Grab new video frame...
-      mVideoSource.GetAndFillFrameBWandRGB(imFrameBW, imFrameRGB);  
+      mVideoSource.GetAndFillFrameBWandRGB(imFrameBW, imFrameRGB, imFrameFull);
       
       // Set up openGL
       mGLWindow.SetupViewport();
