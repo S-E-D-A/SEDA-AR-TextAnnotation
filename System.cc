@@ -16,7 +16,7 @@ using namespace GVars3;
 
 
 System::System()
-  : mGLWindow(mVideoSource.FullSize(), "PTAM")
+  : mGLWindow(mVideoSource.Size(), "PTAM")
 {
   GUI.RegisterCommand("exit", GUICommandCallBack, this);
   GUI.RegisterCommand("quit", GUICommandCallBack, this);

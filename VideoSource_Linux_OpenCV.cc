@@ -100,6 +100,19 @@ void conversionRGB(Mat frame, Image<Rgb<byte> > &imRGB)
   }
 }
 
+void conversionFull(Mat frame, Image<Rgb<byte> > &imRGB)
+{
+  Mat clone = frame.clone();
+  Mat_<Vec3b>& frame_p = (Mat_<Vec3b>&)clone;
+  for (int i = 0; i < FULL_HEIGHT; i++){
+    for (int j = 0; j < FULL_WIDTH; j++){
+      imRGB[i][j].red = frame_p(i,j)[2];
+      imRGB[i][j].green = frame_p(i,j)[1];
+      imRGB[i][j].blue = frame_p(i,j)[0];
+    }
+  }
+}
+
 void VideoSource::GetAndFillFrameBWandRGB(Image<byte> &imBW, Image<Rgb<byte> > &imRGB, Image<Rgb<byte> > &imFull)
 {
   Mat frame;
@@ -116,8 +129,8 @@ void VideoSource::GetAndFillFrameBWandRGB(Image<byte> &imBW, Image<Rgb<byte> > &
       cap->retrieve(frame);
     }
     
-  conversionRGB(frame, imFull);
-  //resize(frame, frame, cv::Size(PTAM_WIDTH, PTAM_HEIGHT));
+  conversionFull(frame, imFull);
+  resize(frame, frame, cv::Size(PTAM_WIDTH, PTAM_HEIGHT));
   conversionNB(frame, imBW);
   conversionRGB(frame, imRGB);
 }
