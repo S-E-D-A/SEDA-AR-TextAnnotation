@@ -9,7 +9,7 @@
 using namespace std;
 using namespace GVars3;
 
-int main()
+int main(int argc, char* argv[])
 {
   cout << "  Welcome to PTAM " << endl;
   cout << "  --------------- " << endl;
@@ -17,7 +17,9 @@ int main()
   cout << "  Copyright (C) Isis Innovation Limited 2008 " << endl;  
   cout << endl;
   cout << "  Parsing settings.cfg ...." << endl;
-  GUI.LoadFile("settings.cfg");
+  
+  if (argc > 1)
+  	GUI.LoadFile(argv[1]);
   
   GUI.StartParserThread(); // Start parsing of the console input
   atexit(GUI.StopParserThread); 
