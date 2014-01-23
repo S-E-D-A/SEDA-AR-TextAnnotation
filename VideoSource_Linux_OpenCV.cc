@@ -91,8 +91,8 @@ void conversionRGB(Mat frame, Image<Rgb<byte> > &imRGB)
 {
   Mat clone = frame.clone();
   Mat_<Vec3b>& frame_p = (Mat_<Vec3b>&)clone;
-  for (int i = 0; i < clone.cols; i++){
-    for (int j = 0; j < clone.rows; j++){
+  for (int i = 0; i < PTAM_HEIGHT; i++){
+    for (int j = 0; j < PTAM_WIDTH; j++){
       imRGB[i][j].red = frame_p(i,j)[2];
       imRGB[i][j].green = frame_p(i,j)[1];
       imRGB[i][j].blue = frame_p(i,j)[0];
@@ -117,8 +117,7 @@ void VideoSource::GetAndFillFrameBWandRGB(Image<byte> &imBW, Image<Rgb<byte> > &
     }
     
   conversionRGB(frame, imFull);
-
-  resize(frame, frame, cv::Size(PTAM_WIDTH, PTAM_HEIGHT));
+  //resize(frame, frame, cv::Size(PTAM_WIDTH, PTAM_HEIGHT));
   conversionNB(frame, imBW);
   conversionRGB(frame, imRGB);
 }
