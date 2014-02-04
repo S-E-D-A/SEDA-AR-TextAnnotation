@@ -140,10 +140,10 @@ void System::Run()
 		sCaption = mpMapViewer->GetMessageForUser();
 	else
 		sCaption = mpTracker->GetMessageForUser();
-		mGLWindow.DrawCaption(sCaption);
-		mGLWindow.DrawMenus();
-		mGLWindow.swap_buffers();
-		mGLWindow.HandlePendingEvents();
+	mGLWindow.DrawCaption(sCaption);
+	mGLWindow.DrawMenus();
+	mGLWindow.swap_buffers();
+	mGLWindow.HandlePendingEvents();
 	}
 }
 
