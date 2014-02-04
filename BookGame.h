@@ -41,6 +41,7 @@ class BookGame
   int mnFrameCounter;
   int mnSummaryCounter;
   int mnWordsPerLine;
+	int mnChapter;
 
   bool mbHasSummary;
   ARSummary* mpChapSummary;

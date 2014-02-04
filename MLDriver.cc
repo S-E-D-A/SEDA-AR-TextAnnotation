@@ -21,7 +21,7 @@ ARSummary* MLDriver::GetSummary(int nChapter)
   if (fsSummary.is_open())
     {
       while ( getline(fsSummary, sLine) ) 
-	vLines.push_back(sLine);
+		  vLines.push_back(sLine);
       fsSummary.close();
     }
 
@@ -37,7 +37,7 @@ ARSummary* MLDriver::GetSummary(int nChapter)
       freq = atoi(vStrings[i].c_str());
       pChapSummary->vTopWordFreqs.push_back(freq);
       if (freq > maxfreq)
-	maxfreq = freq;
+		maxfreq = freq;
     }
   for (int i=0; i<vStrings.size(); i++)
     pChapSummary->vTopWordFreqs[i] /= maxfreq; //normalize to 1
@@ -54,6 +54,9 @@ ARSummary* MLDriver::GetSummary(int nChapter)
   for (int i=0; i<vStrings.size(); i++)
       pChapSummary->vSummary.push_back(vStrings[i].c_str());
   
+  //Store the chapter number in the Chapter Object
+  pChapSummary->nChapter = nChapter;
+
   return pChapSummary;
 
 }
