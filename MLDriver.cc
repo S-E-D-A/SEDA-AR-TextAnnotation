@@ -54,6 +54,9 @@ ARSummary* MLDriver::GetSummary(int nChapter)
   for (int i=0; i<vStrings.size(); i++)
       pChapSummary->vSummary.push_back(vStrings[i].c_str());
   
+  //Store the chapter number in the Chapter Object
+  pChapSummary->nChapter = nChapter;
+
   return pChapSummary;
 
 }

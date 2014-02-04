@@ -17,6 +17,7 @@ void BookGame::Reset()
 {
   mnFrameCounter = 0;
   mnSummaryCounter = 0;
+	mnChapter = 0;
 }
 
 void BookGame::UpdateScale(double dScale)
@@ -29,6 +30,11 @@ void BookGame::UpdateSummary(ARSummary* pChapSummary)
   mbHasSummary = true;
   mpChapSummary = pChapSummary;
   // delete pChapSummary;
+	mnChapter = pChapSummary->nChapter;
+	if (mnChapter == 0)
+		mnWordsPerLine = 3;
+	else
+		mnWordsPerLine = 4;
 
   //Delete previous label+summary
   if (mnSummaryCounter != 0)
@@ -100,42 +106,80 @@ void BookGame::DrawStuff(Vector<3> v3CameraPos)
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0);
   
     glMatrixMode(GL_MODELVIEW);
-    glColor3f(0.15f, 0.15f, 0.15f); //Grey
-    //glColor3f(1.0f, 0.15f, 1.0f); //Grey
-    
-    //Render histogram bars
-    for (int i=0; i<5; i++)
-      {
-	double dHeight = mpChapSummary->vTopWordFreqs[i];
-	glLoadIdentity();
-	glScaled(mdScale, mdScale, mdScale);
-	glTranslatef(8.0f + 1.5f*i, 0.0f, 5*(dHeight/2));
-	glScaled(1.0f, 1.0f, 5*dHeight);
-	glCallList(mvHistDisplayList[i]);
-      }
+   
+	if (mnChapter == 0)
+	{
+		glColor3f(0.15f, 0.15f, 0.15f); //Grey
+			
+		//Render histogram bars
+		for (int i=0; i<5; i++)
+		{
+			double dHeight = mpChapSummary->vTopWordFreqs[i];
+			glLoadIdentity();
+			glScaled(mdScale, mdScale, mdScale);
+			glTranslatef(8.0f + 1.5f*i, 0.0f, 5*(dHeight/2));
+			glScaled(1.0f, 1.0f, 5*dHeight);
+			glCallList(mvHistDisplayList[i]);
+		}
 
-    //Render histogram labels
-    for (int i=0; i<5; i++)
-      {
-    	glLoadIdentity();
-	glScaled(mdScale, mdScale, mdScale);
-	glTranslatef(8.0f + 1.5f*i, 0.0f, 0.0f);
-	glTranslatef(-0.25f, -0.75f, 0.0f);
-	glRotated(-90, 0, 0, 1);
-	glScalef(0.5f, 0.5f, 0.5f);
-	glCallList(mnLabelDisplayList+i);
-      }	
+		//Render histogram labels
+		for (int i=0; i<5; i++)
+		{
+			glLoadIdentity();
+			glScaled(mdScale, mdScale, mdScale);
+			glTranslatef(8.0f + 1.5f*i, 0.0f, 0.0f);
+			glTranslatef(-0.25f, -0.75f, 0.0f);
+			glRotated(-90, 0, 0, 1);
+			glScalef(0.5f, 0.5f, 0.5f);
+			glCallList(mnLabelDisplayList+i);
+		}	
 
-    //Render summary
-    glLoadIdentity();
-    glScaled(mdScale, mdScale, 0.0f);
-    glScaled(0.5f, 0.5f, 0.0f);
-    glTranslatef(-35, 10.0f, 0.0f);
-    glCallList(mnSummaryDisplayList);
-  }
+		//Render summary
+		glLoadIdentity();
+		glScaled(mdScale, mdScale, 0.0f);
+		glScaled(0.75f, 0.75f, 0.0f);
+		glTranslatef(-25.0f, 0.0f, 0.0f);
+		glCallList(mnSummaryDisplayList);
+	}
+	else
+	{
+		glColor3f(0.15f, 0.15f, 0.15f); //Grey
+			
+		//Render histogram bars
+		for (int i=0; i<5; i++)
+		{
+			double dHeight = mpChapSummary->vTopWordFreqs[i];
+			glLoadIdentity();
+			glScaled(mdScale, mdScale, mdScale);
+			glTranslatef(8.0f + 1.5f*i, 0.0f, 5*(dHeight/2));
+			glScaled(1.0f, 1.0f, 5*dHeight);
+			glCallList(mvHistDisplayList[i]);
+		}
 
-  glDisable(GL_LIGHTING);
-  glDisable(GL_DEPTH_TEST);
+		//Render histogram labels
+		for (int i=0; i<5; i++)
+		{
+			glLoadIdentity();
+			glScaled(mdScale, mdScale, mdScale);
+			glTranslatef(8.0f + 1.5f*i, 0.0f, 0.0f);
+			glTranslatef(-0.25f, -0.75f, 0.0f);
+			glRotated(-90, 0, 0, 1);
+			glScalef(0.5f, 0.5f, 0.5f);
+			glCallList(mnLabelDisplayList+i);
+		}	
+
+		//Render summary
+		glLoadIdentity();
+		glScaled(mdScale, mdScale, 0.0f);
+		glScaled(0.5f, 0.5f, 0.0f);
+		glTranslatef(-35, 10.0f, 0.0f);
+		glCallList(mnSummaryDisplayList);
+	}
+	
+	glDisable(GL_LIGHTING);
+	glDisable(GL_DEPTH_TEST);
+
+	}
 
 };
 
