@@ -64,73 +64,73 @@ System::System()
 
 void System::Run()
 {
-  while(!mbDone)
+	while(!mbDone)
     {
       
-      // We use two versions of each video frame:
-      // One black and white (for processing by the tracker etc)
-      // and one RGB, for drawing.
+		// We use two versions of each video frame:
+		// One black and white (for processing by the tracker etc)
+		// and one RGB, for drawing.
 
-      // Grab new video frame...
-      mVideoSource.GetAndFillFrameBWandRGB(mimFrameBW, mimFrameRGB, mimFrameFull);
-      mnFrame++;
-      static bool bFirstFrame = true;
-      if(bFirstFrame)
-	{
-	  mpARDriver->Init();
-	  bFirstFrame = false;
+		// Grab new video frame...
+		mVideoSource.GetAndFillFrameBWandRGB(mimFrameBW, mimFrameRGB, mimFrameFull);
+		mnFrame++;
+		static bool bFirstFrame = true;
+		if(bFirstFrame)
+		{
+		mpARDriver->Init();
+		bFirstFrame = false;
 	}
       
-      mGLWindow.SetupViewport();
-      mGLWindow.SetupVideoOrtho();
-      mGLWindow.SetupVideoRasterPosAndZoom();
-      
-      if(!mpMap->IsGood())
-	mpARDriver->Reset();
-      
-      static gvar3<int> gvnDrawMap("DrawMap", 0, HIDDEN|SILENT);
-      static gvar3<int> gvnDrawAR("DrawAR", 0, HIDDEN|SILENT);
-      
-      bool bDrawMap = mpMap->IsGood() && *gvnDrawMap;
-      bool bDrawAR = mpMap->IsGood() && *gvnDrawAR;
-      
-      mpTracker->TrackFrame(mimFrameBW, !bDrawAR && !bDrawMap);
+	mGLWindow.SetupViewport();
+	mGLWindow.SetupVideoOrtho();
+	mGLWindow.SetupVideoRasterPosAndZoom();
+		  
+	if(!mpMap->IsGood())
+		mpARDriver->Reset();
+		  
+	static gvar3<int> gvnDrawMap("DrawMap", 0, HIDDEN|SILENT);
+	static gvar3<int> gvnDrawAR("DrawAR", 0, HIDDEN|SILENT);
 
-      //bNewSummary will be the return value of some CV related function
-      //such as template matching
-      ARSummary* pChapSummary;
-      if (mnFrame % 100 == 0)
+	bool bDrawMap = mpMap->IsGood() && *gvnDrawMap;
+	bool bDrawAR = mpMap->IsGood() && *gvnDrawAR;
+		  
+	mpTracker->TrackFrame(mimFrameBW, !bDrawAR && !bDrawMap);
+
+	//bNewSummary will be the return value of some CV related function
+	//such as template matching
+	ARSummary* pChapSummary;
+	if (mnFrame % 100 == 0)
 	{
-	  cout << "Get Summary" << endl;
-	  pChapSummary = mpMLDriver->GetSummary(mnSummary++);
-	  if (mnSummary == 4)
-	    mnSummary = 1;
-	  mbNewSummary = true;
+		cout << "Get Summary" << endl;
+		pChapSummary = mpMLDriver->GetSummary(mnSummary++);
+		if (mnSummary == 4)
+			mnSummary = 1;
+		mbNewSummary = true;
 	}
 
-      if(bDrawMap)
-	mpMapViewer->DrawMap(mpTracker->GetCurrentPose());
-      else if(bDrawAR)
+	if(bDrawMap)
+		mpMapViewer->DrawMap(mpTracker->GetCurrentPose());
+	else if(bDrawAR)
 	{
-	  if (mbNewSummary)
-	    {
-	      mpARDriver->mpGame->UpdateSummary(pChapSummary);
-	      mbNewSummary = false;
-	    }
-	  mpARDriver->Render(mimFrameRGB, mpTracker->GetCurrentPose());
+		if (mbNewSummary)
+		{
+			mpARDriver->mpGame->UpdateSummary(pChapSummary);
+			mbNewSummary = false;
+		}
+		mpARDriver->Render(mimFrameRGB, mpTracker->GetCurrentPose());
 	}
 
-      //      mGLWindow.GetMousePoseUpdate();
-      string sCaption;
-      if(bDrawMap)
-	sCaption = mpMapViewer->GetMessageForUser();
-      else
-	sCaption = mpTracker->GetMessageForUser();
-      mGLWindow.DrawCaption(sCaption);
-      mGLWindow.DrawMenus();
-      mGLWindow.swap_buffers();
-      mGLWindow.HandlePendingEvents();
-    }
+	//      mGLWindow.GetMousePoseUpdate();
+	string sCaption;
+	if(bDrawMap)
+		sCaption = mpMapViewer->GetMessageForUser();
+	else
+		sCaption = mpTracker->GetMessageForUser();
+		mGLWindow.DrawCaption(sCaption);
+		mGLWindow.DrawMenus();
+		mGLWindow.swap_buffers();
+		mGLWindow.HandlePendingEvents();
+	}
 }
 
 void System::GUICommandCallBack(void *ptr, string sCommand, string sParams)
