@@ -55,11 +55,13 @@ System::System()
   GUI.ParseLine("DrawMap=0");
   GUI.ParseLine("Menu.AddMenuToggle Root \"View Map\" DrawMap Root");
   GUI.ParseLine("Menu.AddMenuToggle Root \"Draw AR\" DrawAR Root");
+  GUI.ParseLine("Chapter=0");
+  GUI.ParseLine("Menu.AddMenuSlider Root \"Chapter\" Chapter 0 3 Root"); 
   
   mbDone = false;
   mbNewSummary = false;
   mnFrame = 0;
-  mnSummary = 1;
+  mnChapter = -1;
 };
 
 void System::Run()
@@ -96,16 +98,28 @@ void System::Run()
 		  
 	mpTracker->TrackFrame(mimFrameBW, !bDrawAR && !bDrawMap);
 
-	//bNewSummary will be the return value of some CV related function
-	//such as template matching
+	// bNewSummary will be the return value of some CV related function
+	// such as template matching
 	ARSummary* pChapSummary;
-	if (mnFrame % 100 == 0)
+
+	// This will cycle through the chapters automatically for demo purposes
+	//if (mnFrame % 100 == 0)
+	//{
+	//	cout << "Get Summary" << endl;
+	//	pChapSummary = mpMLDriver->GetSummary(mnChapter++);
+	//	if (mnChapter == 4)
+	//		mnChapter = 1;
+	//	mbNewSummary = true;
+	//}
+	
+	// Uses the gvar Chapter to set chapter number
+	static gvar3<int> gvnChapter("Chapter", 0, HIDDEN|SILENT);
+	if (*gvnChapter != mnChapter)
 	{
-		cout << "Get Summary" << endl;
-		pChapSummary = mpMLDriver->GetSummary(mnSummary++);
-		if (mnSummary == 4)
-			mnSummary = 1;
+		cout << "New Chapter" << endl;
+		pChapSummary = mpMLDriver->GetSummary(*gvnChapter);
 		mbNewSummary = true;
+		mnChapter = *gvnChapter;
 	}
 
 	if(bDrawMap)
