@@ -83,67 +83,57 @@ void System::Run()
 			bFirstFrame = false;
 		}
       
-		mGLWindow.SetupViewport();
-		mGLWindow.SetupVideoOrtho();
-		mGLWindow.SetupVideoRasterPosAndZoom();
-			  
-		if(!mpMap->IsGood())
-			mpARDriver->Reset();
-			  
-		static gvar3<int> gvnDrawMap("DrawMap", 0, HIDDEN|SILENT);
-		static gvar3<int> gvnDrawAR("DrawAR", 0, HIDDEN|SILENT);
+	mGLWindow.SetupViewport();
+	mGLWindow.SetupVideoOrtho();
+	mGLWindow.SetupVideoRasterPosAndZoom();
+		  
+	if(!mpMap->IsGood())
+		mpARDriver->Reset();
+		  
+	static gvar3<int> gvnDrawMap("DrawMap", 0, HIDDEN|SILENT);
+	static gvar3<int> gvnDrawAR("DrawAR", 0, HIDDEN|SILENT);
 
-		bool bDrawMap = mpMap->IsGood() && *gvnDrawMap;
-		bool bDrawAR = mpMap->IsGood() && *gvnDrawAR;
-			  
-		mpTracker->TrackFrame(mimFrameBW, !bDrawAR && !bDrawMap);
+	bool bDrawMap = mpMap->IsGood() && *gvnDrawMap;
+	bool bDrawAR = mpMap->IsGood() && *gvnDrawAR;
+		  
+	mpTracker->TrackFrame(mimFrameBW, !bDrawAR && !bDrawMap);
 
-		// bNewSummary will be the return value of some CV related function
-		// such as template matching
-		ARSummary* pChapSummary;
+	// bNewSummary will be the return value of some CV related function
+	// such as template matching
+	ARSummary* pChapSummary;
 
-		// This will cycle through the chapters automatically for demo purposes
-		//if (mnFrame % 100 == 0)
-		//{
-		//	cout << "Get Summary" << endl;
-		//	pChapSummary = mpMLDriver->GetSummary(mnChapter++);
-		//	if (mnChapter == 4)
-		//		mnChapter = 1;
-		//	mbNewSummary = true;
-		//}
-		
-		// Uses the gvar Chapter to set chapter number
-		static gvar3<int> gvnChapter("Chapter", 0, HIDDEN|SILENT);
-		if (*gvnChapter != mnChapter)
+	// Uses the gvar Chapter to set chapter number
+	static gvar3<int> gvnChapter("Chapter", 0, HIDDEN|SILENT);
+	if (*gvnChapter != mnChapter)
+	{
+		cout << "New Chapter" << endl;
+		pChapSummary = mpMLDriver->GetSummary(*gvnChapter);
+		mbNewSummary = true;
+		mnChapter = *gvnChapter;
+	}
+
+	if(bDrawMap)
+		mpMapViewer->DrawMap(mpTracker->GetCurrentPose());
+	else if(bDrawAR)
+	{
+		if (mbNewSummary)
 		{
-			cout << "New Chapter" << endl;
-			pChapSummary = mpMLDriver->GetSummary(*gvnChapter);
-			mbNewSummary = true;
-			mnChapter = *gvnChapter;
+			mpARDriver->mpGame->UpdateSummary(pChapSummary);
+			mbNewSummary = false;
 		}
+		mpARDriver->Render(mimFrameRGB, mpTracker->GetCurrentPose());
+	}
 
-		if(bDrawMap)
-			mpMapViewer->DrawMap(mpTracker->GetCurrentPose());
-		else if(bDrawAR)
-		{
-			if (mbNewSummary)
-			{
-				mpARDriver->mpGame->UpdateSummary(pChapSummary);
-				mbNewSummary = false;
-			}
-			mpARDriver->Render(mimFrameRGB, mpTracker->GetCurrentPose());
-		}
-
-		mGLWindow.GetMousePoseUpdate();
-		string sCaption;
-		if(bDrawMap)
-			sCaption = mpMapViewer->GetMessageForUser();
-		else
-			sCaption = mpTracker->GetMessageForUser();
-		mGLWindow.DrawCaption(sCaption);
-		mGLWindow.DrawMenus();
-		mGLWindow.swap_buffers();
-		mGLWindow.HandlePendingEvents();
+	//      mGLWindow.GetMousePoseUpdate();
+	string sCaption;
+	if(bDrawMap)
+		sCaption = mpMapViewer->GetMessageForUser();
+	else
+		sCaption = mpTracker->GetMessageForUser();
+	mGLWindow.DrawCaption(sCaption);
+	mGLWindow.DrawMenus();
+	mGLWindow.swap_buffers();
+	mGLWindow.HandlePendingEvents();
 	}
 }
 
