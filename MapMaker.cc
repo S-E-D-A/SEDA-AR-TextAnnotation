@@ -336,7 +336,7 @@ bool MapMaker::InitFromStereo(KeyFrame &kF,
     }
   
   // Rotate and translate the map so the dominant plane is at z=0:
-  ApplyGlobalTransformationToMap(CalcPlaneAligner());
+  ApplyGlobalTransformationToMap(CalcPlaneAligner(mMap.vpPoints));
   mMap.bGood = true;
   se3TrackerPose = pkSecond->se3CfromW;
 
@@ -1039,9 +1039,9 @@ bool MapMaker::IsDistanceToNearestKeyFrameExcessive(KeyFrame &kCurrent)
 }
 
 // Find a dominant plane in the map, find an SE3<> to put it as the z=0 plane
-SE3<> MapMaker::CalcPlaneAligner()
+SE3<> MapMaker::CalcPlaneAligner(vector<MapPoint*> vpPoints)
 {
-  unsigned int nPoints = mMap.vpPoints.size();
+  unsigned int nPoints = vpPoints.size();
   if(nPoints < 10)
     {
       cout << "  MapMaker: CalcPlane: too few points to calc plane." << endl;

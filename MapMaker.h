@@ -65,7 +65,7 @@ protected:
   virtual void run();      // The MapMaker thread code lives here
 
   // Functions for starting the map from scratch:
-  SE3<> CalcPlaneAligner();
+  SE3<> CalcPlaneAligner(std::vector<MapPoint*> vpPoints);
   void ApplyGlobalTransformationToMap(SE3<> se3NewFromOld);
   void ApplyGlobalScaleToMap(double dScale);
   
