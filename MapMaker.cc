@@ -415,11 +415,10 @@ void MapMaker::ApplyGlobalTransformationToMap(SE3<> se3NewFromOld)
   
   SO3<> so3Rot = se3NewFromOld.get_rotation();
   for(unsigned int i=0; i<mMap.vpPoints.size(); i++)
-    {
-      mMap.vpPoints[i]->v3WorldPos = 
-	se3NewFromOld * mMap.vpPoints[i]->v3WorldPos;
+  {
+      mMap.vpPoints[i]->v3WorldPos = se3NewFromOld * mMap.vpPoints[i]->v3WorldPos;
       mMap.vpPoints[i]->RefreshPixelVectors();
-    }
+  }
 }
 
 // Applies a global scale factor to the map
@@ -1055,72 +1054,80 @@ SE3<> MapMaker::CalcPlaneAligner()
   double dBestDistSquared = 9999999999999999.9;
   
   for(int i=0; i<nRansacs; i++)
-    {
+  {
+	  //Choose 3 points at random
       int nA = rand()%nPoints;
       int nB = nA;
       int nC = nA;
       while(nB == nA)
-	nB = rand()%nPoints;
+		  nB = rand()%nPoints;
       while(nC == nA || nC==nB)
-	nC = rand()%nPoints;
+		  nC = rand()%nPoints;
       
+	  //Calculate the mean 3D position
       Vector<3> v3Mean = 0.33333333 * (mMap.vpPoints[nA]->v3WorldPos + 
 				       mMap.vpPoints[nB]->v3WorldPos + 
 				       mMap.vpPoints[nC]->v3WorldPos);
       
+	  //Calculate the vector that is normal to plane formed by the three points
       Vector<3> v3CA = mMap.vpPoints[nC]->v3WorldPos  - mMap.vpPoints[nA]->v3WorldPos;
       Vector<3> v3BA = mMap.vpPoints[nB]->v3WorldPos  - mMap.vpPoints[nA]->v3WorldPos;
       Vector<3> v3Normal = v3CA ^ v3BA;
       if(v3Normal * v3Normal  == 0)
-	continue;
+		  continue;
       normalize(v3Normal);
       
       double dSumError = 0.0;
       for(unsigned int i=0; i<nPoints; i++)
-	{
-	  Vector<3> v3Diff = mMap.vpPoints[i]->v3WorldPos - v3Mean;
-	  double dDistSq = v3Diff * v3Diff;
-	  if(dDistSq == 0.0)
-	    continue;
-	  double dNormDist = fabs(v3Diff * v3Normal);
-	  
-	  if(dNormDist > 0.05)
-	    dNormDist = 0.05;
-	  dSumError += dNormDist;
-	}
+	  {
+		  //Calculate the dot product between the plane formed by the three
+		  //random points and every other point in the map. A small error means
+		  //that the two vectors are orthogonal, thus the map point lies near the
+		  //predicted plane
+		  Vector<3> v3Diff = mMap.vpPoints[i]->v3WorldPos - v3Mean;
+		  double dDistSq = v3Diff * v3Diff;
+		  if(dDistSq == 0.0)
+			  continue;
+		  double dNormDist = fabs(v3Diff * v3Normal);
+		  
+		  if(dNormDist > 0.05)
+			  dNormDist = 0.05;
+		  dSumError += dNormDist;
+	  }
       if(dSumError < dBestDistSquared)
-	{
-	  dBestDistSquared = dSumError;
-	  v3BestMean = v3Mean;
-	  v3BestNormal = v3Normal;
-	}
+	  {
+		  dBestDistSquared = dSumError;
+		  v3BestMean = v3Mean;
+		  v3BestNormal = v3Normal;
+	  }
     }
   
   // Done the ransacs, now collect the supposed inlier set
   vector<Vector<3> > vv3Inliers;
   for(unsigned int i=0; i<nPoints; i++)
-    {
+  {
       Vector<3> v3Diff = mMap.vpPoints[i]->v3WorldPos - v3BestMean;
       double dDistSq = v3Diff * v3Diff;
       if(dDistSq == 0.0)
-	continue;
+		  continue;
       double dNormDist = fabs(v3Diff * v3BestNormal);
       if(dNormDist < 0.05)
-	vv3Inliers.push_back(mMap.vpPoints[i]->v3WorldPos);
-    }
+		  vv3Inliers.push_back(mMap.vpPoints[i]->v3WorldPos);
+  }
   
-  // With these inliers, calculate mean and cov
+  // With these inliers, calculate mean
   Vector<3> v3MeanOfInliers = Zeros;
   for(unsigned int i=0; i<vv3Inliers.size(); i++)
-    v3MeanOfInliers+=vv3Inliers[i];
+	  v3MeanOfInliers+=vv3Inliers[i];
   v3MeanOfInliers *= (1.0 / vv3Inliers.size());
   
+  // With these inliers, calculate covariance
   Matrix<3> m3Cov = Zeros;
   for(unsigned int i=0; i<vv3Inliers.size(); i++)
-    {
+  {
       Vector<3> v3Diff = vv3Inliers[i] - v3MeanOfInliers;
       m3Cov += v3Diff.as_col() * v3Diff.as_row();
-    };
+  };
   
   // Find the principal component with the minimal variance: this is the plane normal
   SymEigen<3> sym(m3Cov);
@@ -1128,7 +1135,7 @@ SE3<> MapMaker::CalcPlaneAligner()
   
   // Use the version of the normal which points towards the cam center
   if(v3Normal[2] > 0)
-    v3Normal *= -1.0;
+	  v3Normal *= -1.0;
   
   Matrix<3> m3Rot = Identity;
   m3Rot[2] = v3Normal;
