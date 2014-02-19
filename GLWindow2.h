@@ -36,6 +36,9 @@ public:
   // Text display functions:
   void PrintString(CVD::ImageRef irPos, std::string s);
   void DrawCaption(std::string s);
+
+  // AR viewer mouse interface:
+  CVD::ImageRef GetMouseClick();
   
   // Map viewer mouse interface:
   std::pair<TooN::Vector<6>, TooN::Vector<6> > GetMousePoseUpdate();
@@ -57,6 +60,7 @@ protected:
   virtual void on_mouse_down(GLWindow& win, CVD::ImageRef where, int state, int button);
   virtual void on_event(GLWindow& win, int event);
   CVD::ImageRef mirLastMousePos;
+  CVD::ImageRef mirCurMousePos;
 
   // Storage for map viewer updates:
   TooN::Vector<6> mvMCPoseUpdate;
