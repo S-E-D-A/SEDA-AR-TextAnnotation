@@ -221,6 +221,7 @@ void GLWindow2::on_mouse_move(GLWindow& win, CVD::ImageRef where, int state)
 
 void GLWindow2::on_mouse_down(GLWindow& win, CVD::ImageRef where, int state, int button)
 {
+	mirCurMousePos = where;
   bool bHandled = false;
   for(unsigned int i=0; !bHandled && i<mvpGLWindowMenus.size(); i++)
     bHandled = mvpGLWindowMenus[i]->HandleClick(button, state, where.x, where.y);
@@ -231,6 +232,11 @@ void GLWindow2::on_event(GLWindow& win, int event)
 {
   if(event==EVENT_CLOSE)
     GUI.ParseLine("quit");
+}
+
+ImageRef GLWindow2::GetMouseClick()
+{
+	return mirCurMousePos; 
 }
 
 pair<Vector<6>, Vector<6> > GLWindow2::GetMousePoseUpdate()

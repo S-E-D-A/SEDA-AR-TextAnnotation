@@ -79,9 +79,9 @@ void System::Run()
 		static bool bFirstFrame = true;
 		if(bFirstFrame)
 		{
-		mpARDriver->Init();
-		bFirstFrame = false;
-	}
+			mpARDriver->Init();
+			bFirstFrame = false;
+		}
       
 	mGLWindow.SetupViewport();
 	mGLWindow.SetupVideoOrtho();
@@ -102,16 +102,6 @@ void System::Run()
 	// such as template matching
 	ARSummary* pChapSummary;
 
-	// This will cycle through the chapters automatically for demo purposes
-	//if (mnFrame % 100 == 0)
-	//{
-	//	cout << "Get Summary" << endl;
-	//	pChapSummary = mpMLDriver->GetSummary(mnChapter++);
-	//	if (mnChapter == 4)
-	//		mnChapter = 1;
-	//	mbNewSummary = true;
-	//}
-	
 	// Uses the gvar Chapter to set chapter number
 	static gvar3<int> gvnChapter("Chapter", 0, HIDDEN|SILENT);
 	if (*gvnChapter != mnChapter)
