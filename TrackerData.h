@@ -16,8 +16,7 @@
 struct TrackerData
 {
     TrackerData(MapPoint *pMapPoint)
-        : Point(*pMapPoint)
-    {};
+        : Point(*pMapPoint) {};
 
     MapPoint &Point;
     PatchFinder Finder;
@@ -29,6 +28,7 @@ struct TrackerData
     Matrix<2> m2CamDerivs;  // Camera projection derivs
     bool bInImage;
     bool bPotentiallyVisible;
+    bool bToBeUseForPlaneCalc;
 
     int nSearchLevel;
     bool bSearched;
