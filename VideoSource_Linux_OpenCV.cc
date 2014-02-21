@@ -8,11 +8,11 @@
  * - In the Makefile:
  *- set the linkflags to
  LINKFLAGS = -L MY_CUSTOM_LINK_PATH -lblas -llapack -lGVars3 -lcvd -lcv -lcxcore -lhighgui
- *- set the videosource to 
+ *- set the videosource to
  VIDEOSOURCE = VideoSource_Linux_OpenCV.o
  * - Compile the project
  * - Enjoy !
- * 
+ *
  * Notice this code define two constants for the image width and height (PTAM_WIDTH and PTAM_HEIGHT)
  */
 
@@ -37,103 +37,103 @@ using namespace cv;
 
 void VideoSource::ResetVideo()
 {
-  string sVideoFile = GV3::get<string>("Videofile");
-  if (sVideoFile == "")
-    mptr = new VideoCapture(0); //use default webcam
-  else
-    mptr = new VideoCapture(sVideoFile);
+    string sVideoFile = GV3::get<string>("Videofile");
+    if (sVideoFile == "")
+        mptr = new VideoCapture(0); //use default webcam
+    else
+        mptr = new VideoCapture(sVideoFile);
 
-  VideoCapture* cap = (VideoCapture*)mptr;
-  if(!cap->isOpened())
+    VideoCapture* cap = (VideoCapture*)mptr;
+    if(!cap->isOpened())
     {
-      cerr << "Unable to get the camera" << endl;
-      exit(-1);
+        cerr << "Unable to get the camera" << endl;
+        exit(-1);
     }
-  cap->set(CV_CAP_PROP_FRAME_WIDTH, FULL_WIDTH);
-  cap->set(CV_CAP_PROP_FRAME_HEIGHT, FULL_HEIGHT);
-  cout << "width is: " << cap->get(3) << " height is: " << cap->get(4) << endl;
+    cap->set(CV_CAP_PROP_FRAME_WIDTH, FULL_WIDTH);
+    cap->set(CV_CAP_PROP_FRAME_HEIGHT, FULL_HEIGHT);
+    cout << "width is: " << cap->get(3) << " height is: " << cap->get(4) << endl;
 
-  mirSize = ImageRef(PTAM_WIDTH, PTAM_HEIGHT);
-  mirFullSize = ImageRef(FULL_WIDTH, FULL_HEIGHT);
+    mirSize = ImageRef(PTAM_WIDTH, PTAM_HEIGHT);
+    mirFullSize = ImageRef(FULL_WIDTH, FULL_HEIGHT);
 }
 
 VideoSource::VideoSource()
 {
-  cout << "  VideoSource_Linux: Opening video source..." << endl;
-  ResetVideo();
-  cout << "  ... got video source." << endl;
+    cout << "  VideoSource_Linux: Opening video source..." << endl;
+    ResetVideo();
+    cout << "  ... got video source." << endl;
 
-  //mirSize = ImageRef(PTAM_WIDTH, PTAM_HEIGHT);
+    //mirSize = ImageRef(PTAM_WIDTH, PTAM_HEIGHT);
 };
 
 ImageRef VideoSource::Size()
-{ 
-  return mirSize;
+{
+    return mirSize;
 };
 
 ImageRef VideoSource::FullSize()
-{ 
-  return mirFullSize;
+{
+    return mirFullSize;
 };
 
 void conversionNB(Mat frame, Image<byte> &imBW)
 {
-  Mat clone = frame.clone();
-  Mat_<Vec3b>& frame_p = (Mat_<Vec3b>&)clone;
-  for (int i = 0; i < PTAM_HEIGHT; i++){
-    for (int j = 0; j < PTAM_WIDTH; j++){
-      imBW[i][j] = (frame_p(i,j)[0] + frame_p(i,j)[1] + frame_p(i,j)[2]) / 3;
+    Mat clone = frame.clone();
+    Mat_<Vec3b>& frame_p = (Mat_<Vec3b>&)clone;
+    for (int i = 0; i < PTAM_HEIGHT; i++) {
+        for (int j = 0; j < PTAM_WIDTH; j++) {
+            imBW[i][j] = (frame_p(i,j)[0] + frame_p(i,j)[1] + frame_p(i,j)[2]) / 3;
+        }
     }
-  }
 }
 
 void conversionRGB(Mat frame, Image<Rgb<byte> > &imRGB)
 {
-  Mat clone = frame.clone();
-  Mat_<Vec3b>& frame_p = (Mat_<Vec3b>&)clone;
-  for (int i = 0; i < PTAM_HEIGHT; i++){
-    for (int j = 0; j < PTAM_WIDTH; j++){
-      imRGB[i][j].red = frame_p(i,j)[2];
-      imRGB[i][j].green = frame_p(i,j)[1];
-      imRGB[i][j].blue = frame_p(i,j)[0];
+    Mat clone = frame.clone();
+    Mat_<Vec3b>& frame_p = (Mat_<Vec3b>&)clone;
+    for (int i = 0; i < PTAM_HEIGHT; i++) {
+        for (int j = 0; j < PTAM_WIDTH; j++) {
+            imRGB[i][j].red = frame_p(i,j)[2];
+            imRGB[i][j].green = frame_p(i,j)[1];
+            imRGB[i][j].blue = frame_p(i,j)[0];
+        }
     }
-  }
 }
 
 void conversionFull(Mat frame, Image<Rgb<byte> > &imRGB, cv::Size full)
 {
-  Mat clone = frame.clone();
-  Mat_<Vec3b>& frame_p = (Mat_<Vec3b>&)clone;
+    Mat clone = frame.clone();
+    Mat_<Vec3b>& frame_p = (Mat_<Vec3b>&)clone;
 
-  for (int i = 0; i < full.height; i++){
-    for (int j = 0; j < full.width; j++){
-      imRGB[i][j].red = frame_p(i,j)[2];
-      imRGB[i][j].green = frame_p(i,j)[1];
-      imRGB[i][j].blue = frame_p(i,j)[0];
+    for (int i = 0; i < full.height; i++) {
+        for (int j = 0; j < full.width; j++) {
+            imRGB[i][j].red = frame_p(i,j)[2];
+            imRGB[i][j].green = frame_p(i,j)[1];
+            imRGB[i][j].blue = frame_p(i,j)[0];
+        }
     }
-  }
 }
 
 void VideoSource::GetAndFillFrameBWandRGB(Image<byte> &imBW, Image<Rgb<byte> > &imRGB, Image<Rgb<byte> > &imFull)
 {
-  Mat frame;
-  VideoCapture* cap = (VideoCapture*)mptr;
+    Mat frame;
+    VideoCapture* cap = (VideoCapture*)mptr;
 
-  bool gotFrame = cap->grab();
-  cap->retrieve(frame);
-    
-  if (!gotFrame)
+    bool gotFrame = cap->grab();
+    cap->retrieve(frame);
+
+    if (!gotFrame)
     {
-      ResetVideo();
-      cap = (VideoCapture*)mptr;
-      cap->grab();
-      cap->retrieve(frame);
+        ResetVideo();
+        cap = (VideoCapture*)mptr;
+        cap->grab();
+        cap->retrieve(frame);
     }
-  
-  cv::Size full = cv::Size(cap->get(3), cap->get(4));
-  conversionFull(frame, imFull, full);
-  resize(frame, frame, cv::Size(PTAM_WIDTH, PTAM_HEIGHT));
-  conversionNB(frame, imBW);
-  conversionRGB(frame, imRGB);
+
+    cv::Size full = cv::Size(cap->get(3), cap->get(4));
+    conversionFull(frame, imFull, full);
+    resize(frame, frame, cv::Size(PTAM_WIDTH, PTAM_HEIGHT));
+    conversionNB(frame, imBW);
+    conversionRGB(frame, imRGB);
 }
 

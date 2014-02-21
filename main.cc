@@ -11,30 +11,30 @@ using namespace GVars3;
 
 int main(int argc, char* argv[])
 {
-  cout << "  Welcome to PTAM " << endl;
-  cout << "  --------------- " << endl;
-  cout << "  Parallel tracking and mapping for Small AR workspaces" << endl;
-  cout << "  Copyright (C) Isis Innovation Limited 2008 " << endl;  
-  cout << endl;
-  cout << "  Parsing settings.cfg ...." << endl;
-  
-  if (argc > 1)
-  	GUI.LoadFile(argv[1]);
-  
-  GUI.StartParserThread(); // Start parsing of the console input
-  atexit(GUI.StopParserThread); 
-  
-  try
+    cout << "  Welcome to PTAM " << endl;
+    cout << "  --------------- " << endl;
+    cout << "  Parallel tracking and mapping for Small AR workspaces" << endl;
+    cout << "  Copyright (C) Isis Innovation Limited 2008 " << endl;
+    cout << endl;
+    cout << "  Parsing settings.cfg ...." << endl;
+
+    if (argc > 1)
+        GUI.LoadFile(argv[1]);
+
+    GUI.StartParserThread(); // Start parsing of the console input
+    atexit(GUI.StopParserThread);
+
+    try
     {
-      System s;
-      s.Run();
+        System s;
+        s.Run();
     }
-  catch(CVD::Exceptions::All e)
+    catch(CVD::Exceptions::All e)
     {
-      cout << endl;
-      cout << "!! Failed to run system; got exception. " << endl;
-      cout << "   Exception was: " << endl;
-      cout << e.what << endl;
+        cout << endl;
+        cout << "!! Failed to run system; got exception. " << endl;
+        cout << "   Exception was: " << endl;
+        cout << e.what << endl;
     }
 }
 

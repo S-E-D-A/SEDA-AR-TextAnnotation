@@ -70,11 +70,11 @@ VideoSource::VideoSource()
      * Retrieve the name of the video source file from settings.cfg.
      */
     string videoSourceFile = GVars3::GV2.GetString("GStreamerVideoFilename",
-            GST_DEFAULT_VIDEO_SOURCE_FILE_NAME);
+                             GST_DEFAULT_VIDEO_SOURCE_FILE_NAME);
 
-     /*!
-      * Initialize the gstreamer library, without the command-line parms.
-      */
+    /*!
+     * Initialize the gstreamer library, without the command-line parms.
+     */
     gst_init(NULL, NULL);
 
     /*!
@@ -87,18 +87,18 @@ VideoSource::VideoSource()
     pipelineString =
         g_strdup_printf(
             "filesrc location=\"%s\" ! "
-             "decodebin ! "
-             "tee ! "
-             "ffmpegcolorspace ! "
-             "videoscale ! "
-             "video/x-raw-rgb,width=%d,height=%d ! "
-             "queue ! "
-             "appsink name=rgbvideo max-buffers=2 drop=false tee0. ! "
-             "queue ! "
-             "ffmpegcolorspace ! "
-             "videoscale ! "
-             "video/x-raw-gray,width=%d,height=%d ! "
-             "appsink name=grayvideo max-buffers=2 drop=false",
+            "decodebin ! "
+            "tee ! "
+            "ffmpegcolorspace ! "
+            "videoscale ! "
+            "video/x-raw-rgb,width=%d,height=%d ! "
+            "queue ! "
+            "appsink name=rgbvideo max-buffers=2 drop=false tee0. ! "
+            "queue ! "
+            "ffmpegcolorspace ! "
+            "videoscale ! "
+            "video/x-raw-gray,width=%d,height=%d ! "
+            "appsink name=grayvideo max-buffers=2 drop=false",
             videoSourceFile.c_str(), GST_MAX_WIDTH, GST_MAX_HEIGHT, GST_MAX_WIDTH, GST_MAX_HEIGHT);
     g_print("gstreamer pipeline:\n%s\n", pipelineString);
     mSourcePipeline = gst_parse_launch(pipelineString, NULL);
@@ -149,7 +149,7 @@ VideoSource::~VideoSource()
  * functions.
  */
 ImageRef VideoSource::Size()
-{ 
+{
     return mFrameSize;
 }
 

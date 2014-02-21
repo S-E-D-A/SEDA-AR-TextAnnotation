@@ -28,30 +28,30 @@ class MapViewer;
 class System
 {
 public:
-  System();
-  void Run();
-  
-private:
-  VideoSource mVideoSource;
-  GLWindow2 mGLWindow;
-  CVD::Image<CVD::Rgb<CVD::byte> > mimFrameRGB;
-  CVD::Image<CVD::Rgb<CVD::byte> > mimFrameFull;
-  CVD::Image<CVD::byte> mimFrameBW;
-  
-  Map *mpMap; 
-  MapMaker *mpMapMaker; 
-  Tracker *mpTracker; 
-  ATANCamera *mpCamera;
-  ARDriver *mpARDriver;
-  MLDriver *mpMLDriver;
-  MapViewer *mpMapViewer;
-  
-  bool mbDone;
-  bool mbNewSummary;
-  int mnFrame;
-  int mnChapter;
+    System();
+    void Run();
 
-  static void GUICommandCallBack(void* ptr, std::string sCommand, std::string sParams);
+private:
+    VideoSource mVideoSource;
+    GLWindow2 mGLWindow;
+    CVD::Image<CVD::Rgb<CVD::byte> > mimFrameRGB;
+    CVD::Image<CVD::Rgb<CVD::byte> > mimFrameFull;
+    CVD::Image<CVD::byte> mimFrameBW;
+
+    Map *mpMap;
+    MapMaker *mpMapMaker;
+    Tracker *mpTracker;
+    ATANCamera *mpCamera;
+    ARDriver *mpARDriver;
+    MLDriver *mpMLDriver;
+    MapViewer *mpMapViewer;
+
+    bool mbDone;
+    bool mbNewSummary;
+    int mnFrame;
+    int mnChapter;
+
+    static void GUICommandCallBack(void* ptr, std::string sCommand, std::string sParams);
 };
 
 

@@ -12,31 +12,31 @@
 class CameraCalibrator
 {
 public:
-  CameraCalibrator();
-  void Run();
-  
+    CameraCalibrator();
+    void Run();
+
 protected:
-  void Reset();
-  void HandleFrame(CVD::Image<CVD::byte> imFrame);
-  static void MainLoopCallback(void* pvUserData);
-  void MainLoopStep();
-  VideoSource mVideoSource;
-  
-  GLWindow2 mGLWindow;
-  ATANCamera mCamera;
-  bool mbDone;
+    void Reset();
+    void HandleFrame(CVD::Image<CVD::byte> imFrame);
+    static void MainLoopCallback(void* pvUserData);
+    void MainLoopStep();
+    VideoSource mVideoSource;
 
-  std::vector<CalibImage> mvCalibImgs;
-  void OptimizeOneStep();
-  
-  bool mbGrabNextFrame;
-  GVars3::gvar3<int> mgvnOptimizing;
-  GVars3::gvar3<int> mgvnShowImage;
-  GVars3::gvar3<int> mgvnDisableDistortion;
-  double mdMeanPixelError;
+    GLWindow2 mGLWindow;
+    ATANCamera mCamera;
+    bool mbDone;
 
-  void GUICommandHandler(std::string sCommand, std::string sParams);
-  static void GUICommandCallBack(void* ptr, std::string sCommand, std::string sParams);
+    std::vector<CalibImage> mvCalibImgs;
+    void OptimizeOneStep();
+
+    bool mbGrabNextFrame;
+    GVars3::gvar3<int> mgvnOptimizing;
+    GVars3::gvar3<int> mgvnShowImage;
+    GVars3::gvar3<int> mgvnDisableDistortion;
+    double mdMeanPixelError;
+
+    void GUICommandHandler(std::string sCommand, std::string sParams);
+    static void GUICommandCallBack(void* ptr, std::string sCommand, std::string sParams);
 };
 
 #endif

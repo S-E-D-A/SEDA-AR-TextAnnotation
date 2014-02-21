@@ -3,7 +3,7 @@
 //
 // VideoSource.h
 // Declares the VideoSource class
-// 
+//
 // This is a very simple class to provide video input; this can be
 // replaced with whatever form of video input that is needed.  It
 // should open the video input on construction, and provide two
@@ -20,16 +20,16 @@ struct VideoSourceData;
 
 class VideoSource
 {
- public:
-  VideoSource();
-  void GetAndFillFrameBWandRGB(CVD::Image<CVD::byte> &imBW, CVD::Image<CVD::Rgb<CVD::byte> > &imRGB, CVD::Image<CVD::Rgb<CVD::byte> > &imFull);
-  CVD::ImageRef Size();
-  CVD::ImageRef FullSize();
-  void ResetVideo();
-  
- private:
+public:
+    VideoSource();
+    void GetAndFillFrameBWandRGB(CVD::Image<CVD::byte> &imBW, CVD::Image<CVD::Rgb<CVD::byte> > &imRGB, CVD::Image<CVD::Rgb<CVD::byte> > &imFull);
+    CVD::ImageRef Size();
+    CVD::ImageRef FullSize();
+    void ResetVideo();
 
-  void *mptr;
-  CVD::ImageRef mirSize;
-  CVD::ImageRef mirFullSize;
+private:
+
+    void *mptr;
+    CVD::ImageRef mirSize;
+    CVD::ImageRef mirFullSize;
 };

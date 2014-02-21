@@ -12,21 +12,21 @@
 
 struct ARSummary
 {
-	int nChapter;
-  std::vector<double> vTopWordFreqs;
-  std::vector<std::string> vTopWords;
-  int nNumSumWords;
-  std::vector<std::string> vSummary;
+    int nChapter;
+    std::vector<double> vTopWordFreqs;
+    std::vector<std::string> vTopWords;
+    int nNumSumWords;
+    std::vector<std::string> vSummary;
 };
 
 class MLDriver
 {
- public:
-  MLDriver();
-  ARSummary* GetSummary(int nChapter);
+public:
+    MLDriver();
+    ARSummary* GetSummary(int nChapter);
 
- protected:
-  std::vector<std::string> ParseLine(std::string sInput);
+protected:
+    std::vector<std::string> ParseLine(std::string sInput);
 
 };
 
