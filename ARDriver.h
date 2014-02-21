@@ -24,35 +24,35 @@ using namespace CVD;
 
 class ARDriver
 {
- public:
-  ARDriver(const ATANCamera &cam, ImageRef irFrameSize, GLWindow2 &glw);
-  void Render(Image<Rgb<byte> > &imFrame, SE3<> se3CamFromWorld);
-  void Reset();
-  void Init();
+public:
+    ARDriver(const ATANCamera &cam, ImageRef irFrameSize, GLWindow2 &glw);
+    void Render(Image<Rgb<byte> > &imFrame, SE3<> se3CamFromWorld);
+    void Reset();
+    void Init();
 
-  // Eyeballs:
-  BookGame* mpGame;
+    // Eyeballs:
+    BookGame* mpGame;
 
- protected:
-  ATANCamera mCamera;
-  GLWindow2 &mGLWindow;
-  void DrawFadingGrid();
-  void MakeFrameBuffer();
-  void DrawFBBackGround();
-  void DrawDistortedFB();
-  void SetFrustum();
-  
-  // Texture stuff:
-  GLuint mnFrameBuffer;
-  GLuint mnFrameBufferTex;
-  GLuint mnFrameTex; //Image from videosource
-  
-  int mnCounter;
-  ImageRef mirFBSize;
-  ImageRef mirFrameSize;
-  SE3<> mse3;
-  bool mbInitialised;
-  double mdBaseline;
+protected:
+    ATANCamera mCamera;
+    GLWindow2 &mGLWindow;
+    void DrawFadingGrid();
+    void MakeFrameBuffer();
+    void DrawFBBackGround();
+    void DrawDistortedFB();
+    void SetFrustum();
+
+    // Texture stuff:
+    GLuint mnFrameBuffer;
+    GLuint mnFrameBufferTex;
+    GLuint mnFrameTex; //Image from videosource
+
+    int mnCounter;
+    ImageRef mirFBSize;
+    ImageRef mirFrameSize;
+    SE3<> mse3;
+    bool mbInitialised;
+    double mdBaseline;
 
 };
 #endif
