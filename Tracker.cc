@@ -734,6 +734,13 @@ void Tracker::TrackMap()
 		if ((*it)->bToBeUsedForPlaneCalc)
 			vpPoints.push_back(&(*it)->Point);
 	}
+	
+	if (vpPoints.size() > 10)
+	{
+		TooN::SE3<> CanvasSE3 = mMapMaker.CalcPlaneAligner(vpPoints);
+	}
+
+
 
     // Update the current keyframe with info on what was found in the frame.
     // Strictly speaking this is unnecessary to do every frame, it'll only be
