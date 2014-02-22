@@ -344,6 +344,11 @@ bool MapMaker::InitFromStereo(KeyFrame &kF,
     }
 
     // Rotate and translate the map so the dominant plane is at z=0:
+	//SE3<> se3Dominant = CalcPlaneAligner(mMap.vpPoints);
+	//MapCanvas* pmc = new MapCanvas();
+	//pmc->se3CFromW = se3Dominant;
+	//mMap.vpMapCanvas.push_back(pmc);
+    //ApplyGlobalTransformationToMap(se3Dominant);
     ApplyGlobalTransformationToMap(CalcPlaneAligner(mMap.vpPoints));
     mMap.bGood = true;
     se3TrackerPose = pkSecond->se3CfromW;
