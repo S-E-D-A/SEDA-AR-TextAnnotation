@@ -20,6 +20,7 @@
 
 struct MapPoint;
 struct KeyFrame;
+struct MapCanvas;
 
 struct Map
 {
@@ -35,6 +36,7 @@ struct Map
     std::vector<MapPoint*> vpPoints;
     std::vector<MapPoint*> vpPointsTrash;
     std::vector<KeyFrame*> vpKeyFrames;
+	std::vector<MapCanvas*> vpMapCanvas;
 
     bool bGood;
 };
