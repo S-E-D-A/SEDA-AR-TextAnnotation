@@ -710,14 +710,30 @@ void Tracker::TrackMap()
 			v2Diff[1] = v2Loc[1] - mirClick.y;
             double dist = TooN::norm(v2Diff); 
 		    if (dist < 100)
+			{
 			    glColor(Rgb<float>(1.0f, 1.0f, 1.0f));
+				(*it)->bToBeUsedForPlaneCalc = true;
+			}
 			else
+			{
                 glColor(gavLevelColors[(*it)->nSearchLevel]);
+				(*it)->bToBeUsedForPlaneCalc = false;
+			}
             glVertex((*it)->v2Image);
         }
         glEnd();
         glDisable(GL_BLEND);
     }
+
+	// Estimate Plane from map points
+	vector<MapPoint*> vpPoints;
+    for(vector<TrackerData*>::reverse_iterator it = vIterationSet.rbegin();
+                it!= vIterationSet.rend();
+                it++)
+	{
+		if ((*it)->bToBeUsedForPlaneCalc)
+			vpPoints.push_back(&(*it)->Point);
+	}
 
     // Update the current keyframe with info on what was found in the frame.
     // Strictly speaking this is unnecessary to do every frame, it'll only be

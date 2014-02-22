@@ -28,7 +28,7 @@ struct TrackerData
     Matrix<2> m2CamDerivs;  // Camera projection derivs
     bool bInImage;
     bool bPotentiallyVisible;
-    bool bToBeUseForPlaneCalc;
+    bool bToBeUsedForPlaneCalc;
 
     int nSearchLevel;
     bool bSearched;
