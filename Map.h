@@ -17,10 +17,10 @@
 #include <vector>
 #include <TooN/se3.h>
 #include <cvd/image.h>
+#include "MapCanvas.h"
 
 struct MapPoint;
 struct KeyFrame;
-struct MapCanvas;
 
 struct Map
 {

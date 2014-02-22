@@ -39,6 +39,7 @@ public:
 
     // AR viewer mouse interface:
     CVD::ImageRef GetMouseClick();
+	bool GetNewClick();
 
     // Map viewer mouse interface:
     std::pair<TooN::Vector<6>, TooN::Vector<6> > GetMousePoseUpdate();
@@ -60,7 +61,8 @@ protected:
     virtual void on_mouse_down(GLWindow& win, CVD::ImageRef where, int state, int button);
     virtual void on_event(GLWindow& win, int event);
     CVD::ImageRef mirLastMousePos;
-    CVD::ImageRef mirCurMousePos;
+    CVD::ImageRef mirCurMouseClick;
+	bool mbNewClick;
 
     // Storage for map viewer updates:
     TooN::Vector<6> mvMCPoseUpdate;

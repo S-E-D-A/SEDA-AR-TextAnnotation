@@ -14,7 +14,7 @@ struct MapCanvas
     SE3<> se3CFromW; //The coordinate frame as a Camera-from-world Transform
 
 
-}
+};
 
 
 #endif

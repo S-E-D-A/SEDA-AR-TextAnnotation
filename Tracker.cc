@@ -68,6 +68,7 @@ void Tracker::Reset()
 
 	mirClick.x = 0;
 	mirClick.y = 0;
+	mbFindCanvas = false;
 
     // Tell the MapMaker to reset itself..
     // this may take some time, since the mapmaker thread may have to wait
@@ -86,10 +87,12 @@ void Tracker::Reset()
 // It figures out what state the tracker is in, and calls appropriate internal tracking
 // functions. bDraw tells the tracker wether it should output any GL graphics
 // or not (it should not draw, for example, when AR stuff is being shown.)
-void Tracker::TrackFrame(Image<byte> &imFrame, bool bDraw, ImageRef irClick)
+void Tracker::TrackFrame(Image<byte> &imFrame, bool bDraw, ImageRef irClick, bool bFindCanvas)
 {
     mbDraw = bDraw;
 	mirClick = irClick;
+	mbFindCanvas = bFindCanvas;
+
     mMessageForUser.str("");   // Wipe the user message clean
 
     // Take the input video image, and convert it into the tracker's keyframe struct
@@ -725,21 +728,26 @@ void Tracker::TrackMap()
         glDisable(GL_BLEND);
     }
 
-	// Estimate Plane from map points
-	vector<MapPoint*> vpPoints;
-    for(vector<TrackerData*>::reverse_iterator it = vIterationSet.rbegin();
-                it!= vIterationSet.rend();
-                it++)
+	if (mbFindCanvas)
 	{
-		if ((*it)->bToBeUsedForPlaneCalc)
-			vpPoints.push_back(&(*it)->Point);
+		// Estimate Plane from map points
+		vector<MapPoint*> vpPoints;
+		for(vector<TrackerData*>::reverse_iterator it = vIterationSet.rbegin();
+					it!= vIterationSet.rend();
+					it++)
+		{
+			if ((*it)->bToBeUsedForPlaneCalc)
+				vpPoints.push_back(&(*it)->Point);
+		}
+		
+		if (vpPoints.size() > 10)
+		{
+			TooN::SE3<> CanvasSE3 = mMapMaker.CalcPlaneAligner(vpPoints);
+			MapCanvas* mc = new MapCanvas();
+			mc->se3CFromW = CanvasSE3;
+			mMap.vpMapCanvas.push_back(mc);
+		}
 	}
-	
-	if (vpPoints.size() > 10)
-	{
-		TooN::SE3<> CanvasSE3 = mMapMaker.CalcPlaneAligner(vpPoints);
-	}
-
 
 
     // Update the current keyframe with info on what was found in the frame.
