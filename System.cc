@@ -95,8 +95,13 @@ void System::Run()
 
         bool bDrawMap = mpMap->IsGood() && *gvnDrawMap;
         bool bDrawAR = mpMap->IsGood() && *gvnDrawAR;
+		
+		// Check if a new canvas location exists
+		ImageRef irClick = mGLWindow.GetMouseClick();
 
-        mpTracker->TrackFrame(mimFrameBW, !bDrawAR && !bDrawMap);
+
+		// Track the current frame
+        mpTracker->TrackFrame(mimFrameBW, !bDrawAR && !bDrawMap, irClick);
 
         // bNewSummary will be the return value of some CV related function
         // such as template matching
@@ -125,6 +130,8 @@ void System::Run()
         }
 
         //      mGLWindow.GetMousePoseUpdate();
+		//ImageRef ir = mGLWindow.GetMouseClick();
+		//cout << ir << endl;
         string sCaption;
         if(bDrawMap)
             sCaption = mpMapViewer->GetMessageForUser();

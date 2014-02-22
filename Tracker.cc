@@ -66,6 +66,9 @@ void Tracker::Reset()
     mv6CameraVelocity = Zeros;
     mbJustRecoveredSoUseCoarse = false;
 
+	mirClick.x = 0;
+	mirClick.y = 0;
+
     // Tell the MapMaker to reset itself..
     // this may take some time, since the mapmaker thread may have to wait
     // for an abort-check during calculation, so sleep while waiting.
@@ -83,9 +86,10 @@ void Tracker::Reset()
 // It figures out what state the tracker is in, and calls appropriate internal tracking
 // functions. bDraw tells the tracker wether it should output any GL graphics
 // or not (it should not draw, for example, when AR stuff is being shown.)
-void Tracker::TrackFrame(Image<byte> &imFrame, bool bDraw)
+void Tracker::TrackFrame(Image<byte> &imFrame, bool bDraw, ImageRef irClick)
 {
     mbDraw = bDraw;
+	mirClick = irClick;
     mMessageForUser.str("");   // Wipe the user message clean
 
     // Take the input video image, and convert it into the tracker's keyframe struct
@@ -699,7 +703,16 @@ void Tracker::TrackMap()
         {
             if(! (*it)->bFound)
                 continue;
-            glColor(gavLevelColors[(*it)->nSearchLevel]);
+
+			TooN::Vector<2> v2Loc = (*it)->v2Image;
+			TooN::Vector<2> v2Diff;
+			v2Diff[0] = v2Loc[0] - mirClick.x;
+			v2Diff[1] = v2Loc[1] - mirClick.y;
+            double dist = TooN::norm(v2Diff); 
+		    if (dist < 100)
+			    glColor(Rgb<float>(1.0f, 1.0f, 1.0f));
+			else
+                glColor(gavLevelColors[(*it)->nSearchLevel]);
             glVertex((*it)->v2Image);
         }
         glEnd();
