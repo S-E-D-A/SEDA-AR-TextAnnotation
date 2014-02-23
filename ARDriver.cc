@@ -8,13 +8,18 @@ using namespace std;
 
 static bool CheckFramebufferStatus();
 
-ARDriver::ARDriver(const ATANCamera &cam, ImageRef irFrameSize, GLWindow2 &glw)
-    :mCamera(cam), mGLWindow(glw)
+ARDriver::ARDriver(Map &m, const ATANCamera &cam, ImageRef irFrameSize, GLWindow2 &glw)
+    :mMap(m), mCamera(cam), mGLWindow(glw)
 {
     mirFrameSize = irFrameSize;
     mCamera.SetImageSize(mirFrameSize);
     mbInitialised = false;
-    mpGame = new BookGame();
+	//for (int i=0; i<m.vpMapCanvas.size(); i++)
+	//{
+    	BookGame* mpGame = new BookGame();
+		mvpGame.push_back(mpGame);
+	//}
+
 }
 
 void ARDriver::Init()
@@ -27,12 +32,12 @@ void ARDriver::Init()
                  GL_RGBA, mirFrameSize.x, mirFrameSize.y, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     MakeFrameBuffer();
-    mpGame->Init();
+    mvpGame[0]->Init();
 };
 
 void ARDriver::Reset()
 {
-    mpGame->Reset();
+    mvpGame[0]->Reset();
     mnCounter = 0;
 }
 
@@ -45,7 +50,7 @@ void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
     };
 
     mdBaseline = GV3::get<double>("MapMaker.Baseline");
-    mpGame->UpdateScale(mdBaseline);
+    mvpGame[0]->UpdateScale(mdBaseline);
 
     mnCounter++;
 
@@ -75,7 +80,7 @@ void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
 
     DrawFadingGrid();
 
-    mpGame->DrawStuff(se3CfromW.inverse().get_translation());
+    mvpGame[0]->DrawStuff(se3CfromW.inverse().get_translation());
 
     glDisable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

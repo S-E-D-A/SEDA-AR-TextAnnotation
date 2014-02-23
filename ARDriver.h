@@ -11,6 +11,7 @@
 #ifndef __AR_Driver_H
 #define __AR_Driver_H
 #include <TooN/se3.h>
+#include "Map.h"
 #include "ATANCamera.h"
 #include "GLWindow2.h"
 #include "OpenGL.h"
@@ -25,15 +26,16 @@ using namespace CVD;
 class ARDriver
 {
 public:
-    ARDriver(const ATANCamera &cam, ImageRef irFrameSize, GLWindow2 &glw);
+    ARDriver(Map &m, const ATANCamera &cam, ImageRef irFrameSize, GLWindow2 &glw);
     void Render(Image<Rgb<byte> > &imFrame, SE3<> se3CamFromWorld);
     void Reset();
     void Init();
 
     // Eyeballs:
-    BookGame* mpGame;
+    vector<BookGame*> mvpGame;
 
 protected:
+	Map &mMap;
     ATANCamera mCamera;
     GLWindow2 &mGLWindow;
     void DrawFadingGrid();

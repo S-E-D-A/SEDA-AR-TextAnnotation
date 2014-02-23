@@ -43,7 +43,7 @@ System::System()
     mpMap = new Map;
     mpMapMaker = new MapMaker(*mpMap, *mpCamera);
     mpTracker = new Tracker(mVideoSource.Size(), *mpCamera, *mpMap, *mpMapMaker);
-    mpARDriver = new ARDriver(*mpCamera, mVideoSource.Size(), mGLWindow);
+    mpARDriver = new ARDriver(*mpMap, *mpCamera, mVideoSource.Size(), mGLWindow);
     mpMLDriver = new MLDriver();
     mpMapViewer = new MapViewer(*mpMap, mGLWindow);
 
@@ -125,7 +125,7 @@ void System::Run()
         {
             if (mbNewSummary)
             {
-                mpARDriver->mpGame->UpdateSummary(pChapSummary);
+                mpARDriver->mvpGame[0]->UpdateSummary(pChapSummary);
                 mbNewSummary = false;
             }
             mpARDriver->Render(mimFrameRGB, mpTracker->GetCurrentPose());
