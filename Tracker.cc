@@ -234,7 +234,11 @@ void Tracker::RenderGrid()
 				v3[0] = (i - nHalfCells) * 0.1;
 				v3[1] = (j - nHalfCells) * 0.1;
 				v3[2] = 0.0;
-				Vector<3> v3Cam = mse3CamFromWorld * mc * v3;
+				Vector<3> v3Cam;
+				if (k==0)
+			    	v3Cam = mse3CamFromWorld * v3;
+				else
+					v3Cam = mse3CamFromWorld * mc.inverse() * v3;
 				if(v3Cam[2] < 0.001)
 					v3Cam[2] = 0.001;
 				imVertices[i][j] = mCamera.Project(project(v3Cam));
