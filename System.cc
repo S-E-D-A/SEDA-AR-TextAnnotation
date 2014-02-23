@@ -59,9 +59,9 @@ System::System()
     GUI.ParseLine("Menu.AddMenuSlider Root \"Chapter\" Chapter 0 3 Root");
 
     mbDone = false;
-    mbNewSummary = false;
+    //mbNewSummary = false;
     mnFrame = 0;
-    mnChapter = -1;
+    //mnChapter = -1;
 };
 
 void System::Run()
@@ -105,29 +105,29 @@ void System::Run()
 		// Track the current frame
         mpTracker->TrackFrame(mimFrameBW, !bDrawAR && !bDrawMap, irClick, bNewCanvasLoc);
 
-        // bNewSummary will be the return value of some CV related function
-        // such as template matching
-        ARSummary* pChapSummary;
+        //// bNewSummary will be the return value of some CV related function
+        //// such as template matching
+        //ARSummary* pChapSummary;
 
-        // Uses the gvar Chapter to set chapter number
-        static gvar3<int> gvnChapter("Chapter", 0, HIDDEN|SILENT);
-        if (*gvnChapter != mnChapter)
-        {
-            cout << "New Chapter" << endl;
-            pChapSummary = mpMLDriver->GetSummary(*gvnChapter);
-            mbNewSummary = true;
-            mnChapter = *gvnChapter;
-        }
+        //// Uses the gvar Chapter to set chapter number
+        //static gvar3<int> gvnChapter("Chapter", 0, HIDDEN|SILENT);
+        //if (*gvnChapter != mnChapter)
+        //{
+        //    cout << "New Chapter" << endl;
+        //    pChapSummary = mpMLDriver->GetSummary(*gvnChapter);
+        //    mbNewSummary = true;
+        //    mnChapter = *gvnChapter;
+        //}
 
         if(bDrawMap)
             mpMapViewer->DrawMap(mpTracker->GetCurrentPose());
         else if(bDrawAR)
         {
-            if (mbNewSummary)
-            {
-                mpARDriver->mvpGame[0]->UpdateSummary(pChapSummary);
-                mbNewSummary = false;
-            }
+            //if (mbNewSummary)
+            //{
+            //    mpARDriver->mvpGame[0]->UpdateSummary(pChapSummary);
+            //    mbNewSummary = false;
+            //}
             mpARDriver->Render(mimFrameRGB, mpTracker->GetCurrentPose());
         }
 

@@ -47,10 +47,10 @@ private:
     MapViewer *mpMapViewer;
 
     bool mbDone;
-    bool mbNewSummary;
+    //bool mbNewSummary;
 	bool mbNewCanvasLoc;
     int mnFrame;
-    int mnChapter;
+    //int mnChapter;
 
     static void GUICommandCallBack(void* ptr, std::string sCommand, std::string sParams);
 };

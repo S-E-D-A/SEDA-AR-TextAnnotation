@@ -14,11 +14,8 @@ ARDriver::ARDriver(Map &m, const ATANCamera &cam, ImageRef irFrameSize, GLWindow
     mirFrameSize = irFrameSize;
     mCamera.SetImageSize(mirFrameSize);
     mbInitialised = false;
-	//for (int i=0; i<m.vpMapCanvas.size(); i++)
-	//{
-    	BookGame* mpGame = new BookGame();
-		mvpGame.push_back(mpGame);
-	//}
+    EyeGame* mpGame = new EyeGame();
+	mvpGame.push_back(mpGame);
 
 }
 
@@ -35,6 +32,11 @@ void ARDriver::Init()
     mvpGame[0]->Init();
 };
 
+void ARDriver::AddGame()
+{
+
+}
+
 void ARDriver::Reset()
 {
     mvpGame[0]->Reset();
@@ -48,9 +50,6 @@ void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
         Init();
         Reset();
     };
-
-    mdBaseline = GV3::get<double>("MapMaker.Baseline");
-    mvpGame[0]->UpdateScale(mdBaseline);
 
     mnCounter++;
 
@@ -79,7 +78,7 @@ void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
 
 
     DrawFadingGrid();
-
+    //for (unsigned int i=0; i<mvpGame.size(); i++)
     mvpGame[0]->DrawStuff(se3CfromW.inverse().get_translation());
 
     glDisable(GL_DEPTH_TEST);

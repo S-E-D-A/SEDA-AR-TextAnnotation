@@ -18,7 +18,7 @@
 #include <cvd/image.h>
 #include <cvd/rgb.h>
 #include <cvd/byte.h>
-#include "BookGame.h"
+#include "EyeGame.h"
 
 using namespace std;
 using namespace CVD;
@@ -27,12 +27,13 @@ class ARDriver
 {
 public:
     ARDriver(Map &m, const ATANCamera &cam, ImageRef irFrameSize, GLWindow2 &glw);
-    void Render(Image<Rgb<byte> > &imFrame, SE3<> se3CamFromWorld);
-    void Reset();
     void Init();
+    void AddGame(SE3<> se3CanvasFromWorld);
+    void Reset();
+    void Render(Image<Rgb<byte> > &imFrame, SE3<> se3CamFromWorld);
 
     // Eyeballs:
-    vector<BookGame*> mvpGame;
+    vector<EyeGame*> mvpGame;
 
 protected:
 	Map &mMap;
