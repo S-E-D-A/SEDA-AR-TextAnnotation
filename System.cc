@@ -88,7 +88,7 @@ void System::Run()
         mGLWindow.SetupVideoRasterPosAndZoom();
 
         if(!mpMap->IsGood())
-            mpARDriver->Reset();
+            mpARDriver->ResetGame();
 
         static gvar3<int> gvnDrawMap("DrawMap", 0, HIDDEN|SILENT);
         static gvar3<int> gvnDrawAR("DrawAR", 0, HIDDEN|SILENT);

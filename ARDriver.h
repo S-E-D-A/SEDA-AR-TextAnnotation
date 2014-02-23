@@ -28,8 +28,8 @@ class ARDriver
 public:
     ARDriver(Map &m, const ATANCamera &cam, ImageRef irFrameSize, GLWindow2 &glw);
     void Init();
-    void AddGame(SE3<> se3CanvasFromWorld);
-    void Reset();
+    void AddGame();
+    void ResetGame();
     void Render(Image<Rgb<byte> > &imFrame, SE3<> se3CamFromWorld);
 
     // Eyeballs:

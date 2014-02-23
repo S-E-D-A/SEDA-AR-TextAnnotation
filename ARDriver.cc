@@ -37,9 +37,10 @@ void ARDriver::AddGame()
 
 }
 
-void ARDriver::Reset()
+void ARDriver::ResetGame()
 {
     mvpGame[0]->Reset();
+    //delete mvpGame[0];
     mnCounter = 0;
 }
 
@@ -48,7 +49,7 @@ void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
     if(!mbInitialised)
     {
         Init();
-        Reset();
+        ResetGame();
     };
 
     mnCounter++;
