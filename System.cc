@@ -43,7 +43,7 @@ System::System()
     mpMap = new Map;
     mpMapMaker = new MapMaker(*mpMap, *mpCamera);
     mpTracker = new Tracker(mVideoSource.Size(), *mpCamera, *mpMap, *mpMapMaker);
-    mpARDriver = new ARDriver(*mpCamera, mVideoSource.Size(), mGLWindow);
+    mpARDriver = new ARDriver(*mpMap, *mpCamera, mVideoSource.Size(), mGLWindow);
     mpMLDriver = new MLDriver();
     mpMapViewer = new MapViewer(*mpMap, mGLWindow);
 
@@ -95,8 +95,15 @@ void System::Run()
 
         bool bDrawMap = mpMap->IsGood() && *gvnDrawMap;
         bool bDrawAR = mpMap->IsGood() && *gvnDrawAR;
+		
+		// Check if a new canvas location exists
+		ImageRef irClick = mGLWindow.GetMouseClick();
+		bool bNewCanvasLoc = mGLWindow.GetNewClick();
+		if (bNewCanvasLoc)
+			cout << "New click" << endl;
 
-        mpTracker->TrackFrame(mimFrameBW, !bDrawAR && !bDrawMap);
+		// Track the current frame
+        mpTracker->TrackFrame(mimFrameBW, !bDrawAR && !bDrawMap, irClick, bNewCanvasLoc);
 
         // bNewSummary will be the return value of some CV related function
         // such as template matching
@@ -118,13 +125,15 @@ void System::Run()
         {
             if (mbNewSummary)
             {
-                mpARDriver->mpGame->UpdateSummary(pChapSummary);
+                mpARDriver->mvpGame[0]->UpdateSummary(pChapSummary);
                 mbNewSummary = false;
             }
             mpARDriver->Render(mimFrameRGB, mpTracker->GetCurrentPose());
         }
 
         //      mGLWindow.GetMousePoseUpdate();
+		//ImageRef ir = mGLWindow.GetMouseClick();
+		//cout << ir << endl;
         string sCaption;
         if(bDrawMap)
             sCaption = mpMapViewer->GetMessageForUser();

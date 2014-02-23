@@ -66,6 +66,10 @@ void Tracker::Reset()
     mv6CameraVelocity = Zeros;
     mbJustRecoveredSoUseCoarse = false;
 
+	mirClick.x = 0;
+	mirClick.y = 0;
+	mbFindCanvas = false;
+
     // Tell the MapMaker to reset itself..
     // this may take some time, since the mapmaker thread may have to wait
     // for an abort-check during calculation, so sleep while waiting.
@@ -83,9 +87,12 @@ void Tracker::Reset()
 // It figures out what state the tracker is in, and calls appropriate internal tracking
 // functions. bDraw tells the tracker wether it should output any GL graphics
 // or not (it should not draw, for example, when AR stuff is being shown.)
-void Tracker::TrackFrame(Image<byte> &imFrame, bool bDraw)
+void Tracker::TrackFrame(Image<byte> &imFrame, bool bDraw, ImageRef irClick, bool bFindCanvas)
 {
     mbDraw = bDraw;
+	mirClick = irClick;
+	mbFindCanvas = bFindCanvas;
+
     mMessageForUser.str("");   // Wipe the user message clean
 
     // Take the input video image, and convert it into the tracker's keyframe struct
@@ -212,41 +219,51 @@ void Tracker::RenderGrid()
     else
         glColor4f(0,0,0,0.6);
 
-    // The grid is projected manually, i.e. GL receives projected 2D coords to draw.
-    int nHalfCells = 8;
-    int nTot = nHalfCells * 2 + 1;
-    Image<Vector<2> >  imVertices(ImageRef(nTot,nTot));
-    for(int i=0; i<nTot; i++)
-        for(int j=0; j<nTot; j++)
-        {
-            Vector<3> v3;
-            v3[0] = (i - nHalfCells) * 0.1;
-            v3[1] = (j - nHalfCells) * 0.1;
-            v3[2] = 0.0;
-            Vector<3> v3Cam = mse3CamFromWorld * v3;
-            if(v3Cam[2] < 0.001)
-                v3Cam[2] = 0.001;
-            imVertices[i][j] = mCamera.Project(project(v3Cam));
-        }
-    glEnable(GL_LINE_SMOOTH);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glLineWidth(2);
-    for(int i=0; i<nTot; i++)
-    {
-        glBegin(GL_LINE_STRIP);
-        for(int j=0; j<nTot; j++)
-            glVertex(imVertices[i][j]);
-        glEnd();
+	for (unsigned int k=0; k<mMap.vpMapCanvas.size(); k++)
+	{
+		SE3<> mc = mMap.vpMapCanvas[k]->se3CFromW;
 
-        glBegin(GL_LINE_STRIP);
-        for(int j=0; j<nTot; j++)
-            glVertex(imVertices[j][i]);
-        glEnd();
-    };
+		// The grid is projected manually, i.e. GL receives projected 2D coords to draw.
+		int nHalfCells = 8;
+		int nTot = nHalfCells * 2 + 1;
+		Image<Vector<2> >  imVertices(ImageRef(nTot,nTot));
+		for(int i=0; i<nTot; i++)
+			for(int j=0; j<nTot; j++)
+			{
+				Vector<3> v3;
+				v3[0] = (i - nHalfCells) * 0.1;
+				v3[1] = (j - nHalfCells) * 0.1;
+				v3[2] = 0.0;
+				Vector<3> v3Cam;
+				if (k==0)
+			    	v3Cam = mse3CamFromWorld * v3;
+				else
+					v3Cam = mse3CamFromWorld * mc.inverse() * v3;
+				if(v3Cam[2] < 0.001)
+					v3Cam[2] = 0.001;
+				imVertices[i][j] = mCamera.Project(project(v3Cam));
+			}
+		glEnable(GL_LINE_SMOOTH);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glLineWidth(2);
+		for(int i=0; i<nTot; i++)
+		{
+			glBegin(GL_LINE_STRIP);
+			for(int j=0; j<nTot; j++)
+				glVertex(imVertices[i][j]);
+			glEnd();
 
-    glLineWidth(1);
-    glColor3f(1,0,0);
+			glBegin(GL_LINE_STRIP);
+			for(int j=0; j<nTot; j++)
+				glVertex(imVertices[j][i]);
+			glEnd();
+		};
+	}
+
+		glLineWidth(1);
+		glColor3f(1,0,0);
+	
 }
 
 // GUI interface. Stuff commands onto the back of a queue so the tracker handles
@@ -469,6 +486,7 @@ void Tracker::TrackMap()
         // Ensure that this map point has an associated TrackerData struct.
         if(!p.pTData) p.pTData = new TrackerData(&p);
         TrackerData &TData = *p.pTData;
+		TData.bToBeUsedForPlaneCalc = false;
 
         // Project according to current view, and if it's not in the image, skip.
         TData.Project(mse3CamFromWorld, mCamera);
@@ -686,6 +704,39 @@ void Tracker::TrackMap()
         v6LastUpdate = v6Update;
     };
 
+	vector<MapPoint*> vpPoints;
+	if (mbFindCanvas)
+	{
+        for(vector<TrackerData*>::reverse_iterator it = vIterationSet.rbegin();
+                it!= vIterationSet.rend();
+                it++)
+		{
+			if (! (*it)->bFound)
+				continue;
+
+			TooN::Vector<2> v2Loc = (*it)->v2Image;
+			TooN::Vector<2> v2Diff;
+			v2Diff[0] = v2Loc[0] - mirClick.x;
+			v2Diff[1] = v2Loc[1] - mirClick.y;
+            double dist = TooN::norm(v2Diff); 
+		    if (dist < 100)
+			{
+				(*it)->bToBeUsedForPlaneCalc = true;
+				vpPoints.push_back(&(*it)->Point);
+			}
+		}
+		
+		// If more than ten points are near click, add canvas SE3 to map
+		if (vpPoints.size() > 10)
+		{
+			TooN::SE3<> CanvasSE3 = mMapMaker.CalcPlaneAligner(vpPoints);
+			MapCanvas* mc = new MapCanvas();
+			mc->se3CFromW = CanvasSE3;
+			mMap.vpMapCanvas.push_back(mc);
+		}
+
+	}
+
     if(mbDraw)
     {
         glPointSize(6);
@@ -699,12 +750,18 @@ void Tracker::TrackMap()
         {
             if(! (*it)->bFound)
                 continue;
-            glColor(gavLevelColors[(*it)->nSearchLevel]);
+
+		    if ((*it)->bToBeUsedForPlaneCalc == true)
+			    glColor(Rgb<float>(1.0f, 1.0f, 1.0f));
+			else
+                glColor(gavLevelColors[(*it)->nSearchLevel]);
+
             glVertex((*it)->v2Image);
         }
         glEnd();
         glDisable(GL_BLEND);
     }
+
 
     // Update the current keyframe with info on what was found in the frame.
     // Strictly speaking this is unnecessary to do every frame, it'll only be

@@ -12,6 +12,11 @@ void Map::Reset()
     for(unsigned int i=0; i<vpPoints.size(); i++)
         delete vpPoints[i];
     vpPoints.clear();
+
+	for(unsigned int i=0; i<vpMapCanvas.size(); i++)
+		delete vpMapCanvas[i];
+	vpMapCanvas.clear();
+
     bGood = false;
     EmptyTrash();
 }

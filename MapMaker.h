@@ -62,6 +62,8 @@ public:
     bool NeedNewKeyFrame(KeyFrame &kCurrent);            // Is it a good camera pose to add another KeyFrame?
     bool IsDistanceToNearestKeyFrameExcessive(KeyFrame &kCurrent);  // Is the camera far away from the nearest KeyFrame (i.e. maybe lost?)
 
+
+    SE3<> CalcPlaneAligner(std::vector<MapPoint*> vpPoints);
 protected:
 
     Map &mMap;               // The map
@@ -69,7 +71,6 @@ protected:
     virtual void run();      // The MapMaker thread code lives here
 
     // Functions for starting the map from scratch:
-    SE3<> CalcPlaneAligner(std::vector<MapPoint*> vpPoints);
     void ApplyGlobalTransformationToMap(SE3<> se3NewFromOld);
     void ApplyGlobalScaleToMap(double dScale);
 

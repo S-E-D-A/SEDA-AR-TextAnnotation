@@ -45,7 +45,7 @@ public:
     Tracker(CVD::ImageRef irVideoSize, const ATANCamera &c, Map &m, MapMaker &mm);
 
     // TrackFrame is the main working part of the tracker: call this every frame.
-    void TrackFrame(CVD::Image<CVD::byte> &imFrame, bool bDraw);
+    void TrackFrame(CVD::Image<CVD::byte> &imFrame, bool bDraw, CVD::ImageRef irClick, bool bFindCanvas);
 
     inline SE3<> GetCurrentPose() {
         return mse3CamFromWorld;
@@ -99,6 +99,9 @@ protected:
     bool mbDidCoarse;               // Did tracking use the coarse tracking stage?
 
     bool mbDraw;                    // Should the tracker draw anything to OpenGL?
+
+	CVD::ImageRef mirClick; // Location to find a new AR canvas
+	bool mbFindCanvas;
 
     // Interface with map maker:
     int mnFrame;                    // Frames processed since last reset

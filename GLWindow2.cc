@@ -36,6 +36,7 @@ GLWindow2::GLWindow2(ImageRef irSize, string sTitle)
     glSetFont("sans");
     mvMCPoseUpdate=Zeros;
     mvLeftPoseUpdate=Zeros;
+	mbNewClick = false;
 };
 
 
@@ -221,7 +222,8 @@ void GLWindow2::on_mouse_move(GLWindow& win, CVD::ImageRef where, int state)
 
 void GLWindow2::on_mouse_down(GLWindow& win, CVD::ImageRef where, int state, int button)
 {
-    mirCurMousePos = where;
+    mirCurMouseClick = where;
+	mbNewClick = true;
     bool bHandled = false;
     for(unsigned int i=0; !bHandled && i<mvpGLWindowMenus.size(); i++)
         bHandled = mvpGLWindowMenus[i]->HandleClick(button, state, where.x, where.y);
@@ -236,9 +238,19 @@ void GLWindow2::on_event(GLWindow& win, int event)
 
 ImageRef GLWindow2::GetMouseClick()
 {
-    return mirCurMousePos;
+    return mirCurMouseClick;
 }
 
+bool GLWindow2::GetNewClick()
+{
+	if (mbNewClick)
+	{
+		mbNewClick = false;
+		return true;
+	}
+	else
+		return false;
+}
 pair<Vector<6>, Vector<6> > GLWindow2::GetMousePoseUpdate()
 {
     pair<Vector<6>, Vector<6> > result = make_pair(mvLeftPoseUpdate, mvMCPoseUpdate);

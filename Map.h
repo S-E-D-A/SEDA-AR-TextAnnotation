@@ -17,6 +17,7 @@
 #include <vector>
 #include <TooN/se3.h>
 #include <cvd/image.h>
+#include "MapCanvas.h"
 
 struct MapPoint;
 struct KeyFrame;
@@ -35,6 +36,7 @@ struct Map
     std::vector<MapPoint*> vpPoints;
     std::vector<MapPoint*> vpPointsTrash;
     std::vector<KeyFrame*> vpKeyFrames;
+	std::vector<MapCanvas*> vpMapCanvas;
 
     bool bGood;
 };

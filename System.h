@@ -48,6 +48,7 @@ private:
 
     bool mbDone;
     bool mbNewSummary;
+	bool mbNewCanvasLoc;
     int mnFrame;
     int mnChapter;
 
