@@ -14,8 +14,8 @@ ARDriver::ARDriver(Map &m, const ATANCamera &cam, ImageRef irFrameSize, GLWindow
     mirFrameSize = irFrameSize;
     mCamera.SetImageSize(mirFrameSize);
     mbInitialised = false;
-    EyeGame* mpGame = new EyeGame();
-	mvpGame.push_back(mpGame);
+    Game * mpGame = new EyeGame();
+    mvpGame.push_back(mpGame);
 
 }
 
@@ -40,8 +40,12 @@ void ARDriver::AddGame()
 void ARDriver::ResetGame()
 {
     mvpGame[0]->Reset();
-    //delete mvpGame[0];
     mnCounter = 0;
+}
+
+void ARDriver::ResetDriver()
+{
+    //delete mvpGame[0];
 }
 
 void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
@@ -80,7 +84,7 @@ void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
 
     DrawFadingGrid();
     //for (unsigned int i=0; i<mvpGame.size(); i++)
-    mvpGame[0]->DrawStuff(se3CfromW.inverse().get_translation());
+    mvpGame[0]->Draw(se3CfromW.inverse().get_translation());
 
     glDisable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

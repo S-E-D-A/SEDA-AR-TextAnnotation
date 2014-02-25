@@ -18,6 +18,7 @@
 #include <cvd/image.h>
 #include <cvd/rgb.h>
 #include <cvd/byte.h>
+#include "Game.h"
 #include "EyeGame.h"
 
 using namespace std;
@@ -30,10 +31,11 @@ public:
     void Init();
     void AddGame();
     void ResetGame();
+    void ResetDriver();
     void Render(Image<Rgb<byte> > &imFrame, SE3<> se3CamFromWorld);
 
     // Eyeballs:
-    vector<EyeGame*> mvpGame;
+    vector<Game*> mvpGame;
 
 protected:
 	Map &mMap;

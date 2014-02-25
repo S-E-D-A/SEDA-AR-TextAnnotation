@@ -12,14 +12,15 @@
 #include <TooN/TooN.h>
 using namespace TooN;
 #include "OpenGL.h"
+#include "Game.h"
 
-class EyeGame
+class EyeGame : public Game
 {
 public:
     EyeGame();
-    void DrawStuff(Vector<3> v3CameraPos);
-    void Reset();
-    void Init();
+    virtual void Draw(Vector<3> v3CameraPos);
+    virtual void Reset();
+    virtual void Init();
 
 
 protected:

@@ -12,7 +12,7 @@ EyeGame::EyeGame()
     mbInitialised = false;
 }
 
-void EyeGame::DrawStuff(Vector<3> v3CameraPos)
+void EyeGame::Draw(Vector<3> v3CameraPos)
 {
     if(!mbInitialised)
         Init();
