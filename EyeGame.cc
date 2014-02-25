@@ -5,7 +5,8 @@
 
 using namespace CVD;
 
-EyeGame::EyeGame()
+EyeGame::EyeGame(SE3<> se3)
+    : Game(se3)
 {
     mdEyeRadius = 0.1;
     mdShadowHalfSize = 2.5 * mdEyeRadius;

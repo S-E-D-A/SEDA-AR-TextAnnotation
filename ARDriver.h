@@ -29,7 +29,7 @@ class ARDriver
 public:
     ARDriver(const ATANCamera &cam, ImageRef irFrameSize, GLWindow2 &glw);
     void Init();
-    void AddGame();
+    void AddGame(const SE3<> se3CanvasFromWorld);
     void ResetGame();
     void ResetDriver();
     void Render(Image<Rgb<byte> > &imFrame, SE3<> se3CamFromWorld);

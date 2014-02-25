@@ -99,11 +99,15 @@ void System::Run()
 		// Check if a new canvas location exists
 		ImageRef irClick = mGLWindow.GetMouseClick();
 		bool bNewCanvasLoc = mGLWindow.GetNewClick();
-		if (bNewCanvasLoc)
-			cout << "New click" << endl;
 
 		// Track the current frame
         mpTracker->TrackFrame(mimFrameBW, !bDrawAR && !bDrawMap, irClick, bNewCanvasLoc);
+		if (bNewCanvasLoc)
+		{
+			cout << "New click" << endl;
+            const SE3<> se3RecentCanvasFromW = mpMap->vpMapCanvas.back()->se3CFromW;
+			mpARDriver->AddGame(se3RecentCanvasFromW);
+		}
 
         //// bNewSummary will be the return value of some CV related function
         //// such as template matching

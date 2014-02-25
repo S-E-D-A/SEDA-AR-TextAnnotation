@@ -14,9 +14,6 @@ ARDriver::ARDriver(const ATANCamera &cam, ImageRef irFrameSize, GLWindow2 &glw)
     mirFrameSize = irFrameSize;
     mCamera.SetImageSize(mirFrameSize);
     mbInitialised = false;
-    Game * mpGame = new EyeGame();
-    mvpGame.push_back(mpGame);
-
 }
 
 void ARDriver::Init()
@@ -29,17 +26,24 @@ void ARDriver::Init()
                  GL_RGBA, mirFrameSize.x, mirFrameSize.y, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     MakeFrameBuffer();
+
+    Vector<6> vZeros = Zeros(6); 
+    SE3<> se3Identity = SE3<>(vZeros);
+    Game * mpGame = new EyeGame(se3Identity);
+    mvpGame.push_back(mpGame);
     mvpGame[0]->Init();
 };
 
-void ARDriver::AddGame()
+void ARDriver::AddGame(const SE3<> se3CanvasFromWorld)
 {
-
+    Game * mpGame = new EyeGame(se3CanvasFromWorld);
+    mvpGame.push_back(mpGame);
 }
 
 void ARDriver::ResetGame()
 {
-    mvpGame[0]->Reset();
+    for (unsigned i=0; i<mvpGame.size(); i++)
+        mvpGame[0]->Reset();
     mnCounter = 0;
 }
 
@@ -83,8 +87,8 @@ void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
 
 
     DrawFadingGrid();
-    //for (unsigned int i=0; i<mvpGame.size(); i++)
-    mvpGame[0]->Draw(se3CfromW.inverse().get_translation());
+    for (unsigned int i=0; i<mvpGame.size(); i++)
+        mvpGame[i]->Draw(se3CfromW.inverse().get_translation());
 
     glDisable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

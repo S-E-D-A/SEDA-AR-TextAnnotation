@@ -17,11 +17,10 @@ using namespace TooN;
 class EyeGame : public Game
 {
 public:
-    EyeGame();
+    EyeGame(SE3<> se3);
     virtual void Draw(Vector<3> v3CameraPos);
     virtual void Reset();
     virtual void Init();
-
 
 protected:
     bool mbInitialised;
