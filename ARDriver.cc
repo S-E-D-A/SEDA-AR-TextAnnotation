@@ -8,8 +8,8 @@ using namespace std;
 
 static bool CheckFramebufferStatus();
 
-ARDriver::ARDriver(Map &m, const ATANCamera &cam, ImageRef irFrameSize, GLWindow2 &glw)
-    :mMap(m), mCamera(cam), mGLWindow(glw)
+ARDriver::ARDriver(const ATANCamera &cam, ImageRef irFrameSize, GLWindow2 &glw)
+    :mCamera(cam), mGLWindow(glw)
 {
     mirFrameSize = irFrameSize;
     mCamera.SetImageSize(mirFrameSize);

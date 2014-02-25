@@ -27,7 +27,7 @@ using namespace CVD;
 class ARDriver
 {
 public:
-    ARDriver(Map &m, const ATANCamera &cam, ImageRef irFrameSize, GLWindow2 &glw);
+    ARDriver(const ATANCamera &cam, ImageRef irFrameSize, GLWindow2 &glw);
     void Init();
     void AddGame();
     void ResetGame();
@@ -38,7 +38,6 @@ public:
     vector<Game*> mvpGame;
 
 protected:
-	Map &mMap;
     ATANCamera mCamera;
     GLWindow2 &mGLWindow;
     void DrawFadingGrid();
