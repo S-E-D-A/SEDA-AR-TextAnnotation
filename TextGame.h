@@ -11,10 +11,12 @@ class TextGame : public Game
 public:
     TextGame(const TooN::SE3<> se3, std::string sText);
     virtual void Draw();
-    virtual void Reset();
-    virtual void Init();
 
 protected:
+    void Init();
+    void DrawString();
+
+    GLuint mnTextDisplayList;
     double mdScale;
     std::string msText;
 

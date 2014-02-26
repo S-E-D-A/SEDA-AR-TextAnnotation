@@ -31,7 +31,7 @@ void ARDriver::Init()
     const SE3<> se3Identity = SE3<>(vZeros);
     Game * mpGame = new TextGame(se3Identity, "Test");
     mvpGame.push_back(mpGame);
-    mvpGame[0]->Init();
+   // mvpGame[0]->Init();
 };
 
 void ARDriver::AddGame(const SE3<> se3CanvasFromWorld)
@@ -42,8 +42,8 @@ void ARDriver::AddGame(const SE3<> se3CanvasFromWorld)
 
 void ARDriver::ResetGame()
 {
-    for (unsigned i=0; i<mvpGame.size(); i++)
-        mvpGame[0]->Reset();
+    //for (unsigned i=0; i<mvpGame.size(); i++)
+    //    mvpGame[0]->Reset();
     mnCounter = 0;
 }
 
