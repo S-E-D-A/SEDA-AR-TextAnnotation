@@ -29,14 +29,14 @@ void ARDriver::Init()
 
     Vector<6> vZeros = Zeros(6); 
     const SE3<> se3Identity = SE3<>(vZeros);
-    Game * mpGame = new TextGame(se3Identity);
+    Game * mpGame = new TextGame(se3Identity, "Test");
     mvpGame.push_back(mpGame);
     mvpGame[0]->Init();
 };
 
 void ARDriver::AddGame(const SE3<> se3CanvasFromWorld)
 {
-    Game * mpGame = new TextGame(se3CanvasFromWorld);
+    Game * mpGame = new TextGame(se3CanvasFromWorld, "Test");
     mvpGame.push_back(mpGame);
 }
 

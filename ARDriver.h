@@ -10,6 +10,7 @@
 //
 #ifndef __AR_Driver_H
 #define __AR_Driver_H
+#include <string>
 #include <TooN/se3.h>
 #include "Map.h"
 #include "ATANCamera.h"

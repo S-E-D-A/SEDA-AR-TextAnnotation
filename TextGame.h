@@ -1,18 +1,22 @@
 #ifndef __TEXTGAME_H
 #define __TEXTGAME_H
 
+#include <string>
 #include <TooN/TooN.h>
-using namespace TooN;
 #include "OpenGL.h"
 #include "Game.h"
 
 class TextGame : public Game
 {
 public:
-    TextGame(const SE3<> se3);
+    TextGame(const TooN::SE3<> se3, std::string sText);
     virtual void Draw();
     virtual void Reset();
     virtual void Init();
+
+protected:
+    double mdScale;
+    std::string msText;
 
 };
 
