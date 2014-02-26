@@ -50,6 +50,7 @@ Tracker::Tracker(ImageRef irVideoSize, const ATANCamera &c, Map &m, MapMaker &mm
 // It's always called in the Tracker's thread, often as a GUI command.
 void Tracker::Reset()
 {
+    mbReset = true;
     mbDidCoarse = false;
     mbUserPressedSpacebar = false;
     mTrackingQuality = GOOD;
@@ -81,6 +82,17 @@ void Tracker::Reset()
 #else
         Sleep(1);
 #endif
+}
+
+bool Tracker::CheckReset()
+{
+    if (mbReset)
+    {
+        mbReset = false;
+        return true;
+    }
+    else
+        return false;
 }
 
 // TrackFrame is called by System.cc with each incoming video frame.
