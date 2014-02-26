@@ -50,6 +50,7 @@ public:
     inline SE3<> GetCurrentPose() {
         return mse3CamFromWorld;
     }
+    bool CheckReset();
 
     // Gets messages to be printed on-screen for the user.
     std::string GetMessageForUser();
@@ -66,6 +67,7 @@ protected:
     CVD::ImageRef mirSize;          // Image size of whole image
 
     void Reset();                   // Restart from scratch. Also tells the mapmaker to reset itself.
+    bool mbReset;
     void RenderGrid();              // Draws the reference grid
 
     // The following members are used for initial map tracking (to get the first stereo pair and correspondences):

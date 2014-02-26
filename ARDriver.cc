@@ -49,7 +49,11 @@ void ARDriver::ResetGame()
 
 void ARDriver::ResetDriver()
 {
-    //delete mvpGame[0];
+    for (unsigned int i=0; i<mvpGame.size(); i++)
+        delete mvpGame[i];
+
+    mvpGame.clear();
+    mbInitialised = false;
 }
 
 void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
