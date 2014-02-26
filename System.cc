@@ -43,7 +43,7 @@ System::System()
     mpMap = new Map;
     mpMapMaker = new MapMaker(*mpMap, *mpCamera);
     mpTracker = new Tracker(mVideoSource.Size(), *mpCamera, *mpMap, *mpMapMaker);
-    mpARDriver = new ARDriver(*mpMap, *mpCamera, mVideoSource.Size(), mGLWindow);
+    mpARDriver = new ARDriver(*mpCamera, mVideoSource.Size(), mGLWindow);
     mpMLDriver = new MLDriver();
     mpMapViewer = new MapViewer(*mpMap, mGLWindow);
 
@@ -59,9 +59,9 @@ System::System()
     GUI.ParseLine("Menu.AddMenuSlider Root \"Chapter\" Chapter 0 3 Root");
 
     mbDone = false;
-    mbNewSummary = false;
+    //mbNewSummary = false;
     mnFrame = 0;
-    mnChapter = -1;
+    //mnChapter = -1;
 };
 
 void System::Run()
@@ -88,7 +88,7 @@ void System::Run()
         mGLWindow.SetupVideoRasterPosAndZoom();
 
         if(!mpMap->IsGood())
-            mpARDriver->Reset();
+            mpARDriver->ResetGame();
 
         static gvar3<int> gvnDrawMap("DrawMap", 0, HIDDEN|SILENT);
         static gvar3<int> gvnDrawAR("DrawAR", 0, HIDDEN|SILENT);
@@ -99,35 +99,39 @@ void System::Run()
 		// Check if a new canvas location exists
 		ImageRef irClick = mGLWindow.GetMouseClick();
 		bool bNewCanvasLoc = mGLWindow.GetNewClick();
-		if (bNewCanvasLoc)
-			cout << "New click" << endl;
 
 		// Track the current frame
         mpTracker->TrackFrame(mimFrameBW, !bDrawAR && !bDrawMap, irClick, bNewCanvasLoc);
+		if (bNewCanvasLoc)
+		{
+			cout << "New click" << endl;
+            const SE3<> se3RecentCanvasFromW = mpMap->vpMapCanvas.back()->se3CFromW;
+			mpARDriver->AddGame(se3RecentCanvasFromW);
+		}
 
-        // bNewSummary will be the return value of some CV related function
-        // such as template matching
-        ARSummary* pChapSummary;
+        //// bNewSummary will be the return value of some CV related function
+        //// such as template matching
+        //ARSummary* pChapSummary;
 
-        // Uses the gvar Chapter to set chapter number
-        static gvar3<int> gvnChapter("Chapter", 0, HIDDEN|SILENT);
-        if (*gvnChapter != mnChapter)
-        {
-            cout << "New Chapter" << endl;
-            pChapSummary = mpMLDriver->GetSummary(*gvnChapter);
-            mbNewSummary = true;
-            mnChapter = *gvnChapter;
-        }
+        //// Uses the gvar Chapter to set chapter number
+        //static gvar3<int> gvnChapter("Chapter", 0, HIDDEN|SILENT);
+        //if (*gvnChapter != mnChapter)
+        //{
+        //    cout << "New Chapter" << endl;
+        //    pChapSummary = mpMLDriver->GetSummary(*gvnChapter);
+        //    mbNewSummary = true;
+        //    mnChapter = *gvnChapter;
+        //}
 
         if(bDrawMap)
             mpMapViewer->DrawMap(mpTracker->GetCurrentPose());
         else if(bDrawAR)
         {
-            if (mbNewSummary)
-            {
-                mpARDriver->mvpGame[0]->UpdateSummary(pChapSummary);
-                mbNewSummary = false;
-            }
+            //if (mbNewSummary)
+            //{
+            //    mpARDriver->mvpGame[0]->UpdateSummary(pChapSummary);
+            //    mbNewSummary = false;
+            //}
             mpARDriver->Render(mimFrameRGB, mpTracker->GetCurrentPose());
         }
 

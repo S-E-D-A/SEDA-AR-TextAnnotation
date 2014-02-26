@@ -8,18 +8,12 @@ using namespace std;
 
 static bool CheckFramebufferStatus();
 
-ARDriver::ARDriver(Map &m, const ATANCamera &cam, ImageRef irFrameSize, GLWindow2 &glw)
-    :mMap(m), mCamera(cam), mGLWindow(glw)
+ARDriver::ARDriver(const ATANCamera &cam, ImageRef irFrameSize, GLWindow2 &glw)
+    :mCamera(cam), mGLWindow(glw)
 {
     mirFrameSize = irFrameSize;
     mCamera.SetImageSize(mirFrameSize);
     mbInitialised = false;
-	//for (int i=0; i<m.vpMapCanvas.size(); i++)
-	//{
-    	BookGame* mpGame = new BookGame();
-		mvpGame.push_back(mpGame);
-	//}
-
 }
 
 void ARDriver::Init()
@@ -32,13 +26,30 @@ void ARDriver::Init()
                  GL_RGBA, mirFrameSize.x, mirFrameSize.y, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     MakeFrameBuffer();
-    mvpGame[0]->Init();
+
+    Vector<6> vZeros = Zeros(6); 
+    const SE3<> se3Identity = SE3<>(vZeros);
+    Game * mpGame = new TextGame(se3Identity, "Test");
+    mvpGame.push_back(mpGame);
+   // mvpGame[0]->Init();
 };
 
-void ARDriver::Reset()
+void ARDriver::AddGame(const SE3<> se3CanvasFromWorld)
 {
-    mvpGame[0]->Reset();
+    Game * mpGame = new TextGame(se3CanvasFromWorld, "Test");
+    mvpGame.push_back(mpGame);
+}
+
+void ARDriver::ResetGame()
+{
+    //for (unsigned i=0; i<mvpGame.size(); i++)
+    //    mvpGame[0]->Reset();
     mnCounter = 0;
+}
+
+void ARDriver::ResetDriver()
+{
+    //delete mvpGame[0];
 }
 
 void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
@@ -46,11 +57,8 @@ void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
     if(!mbInitialised)
     {
         Init();
-        Reset();
+        ResetGame();
     };
-
-    mdBaseline = GV3::get<double>("MapMaker.Baseline");
-    mvpGame[0]->UpdateScale(mdBaseline);
 
     mnCounter++;
 
@@ -77,10 +85,11 @@ void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
     glMultMatrix(mCamera.MakeUFBLinearFrustumMatrix(0.005, 100));
     glMultMatrix(se3CfromW);
 
-
     DrawFadingGrid();
-
-    mvpGame[0]->DrawStuff(se3CfromW.inverse().get_translation());
+    for (unsigned int i=0; i<mvpGame.size(); i++)
+    {
+        mvpGame[i]->Draw();
+    }
 
     glDisable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

@@ -34,7 +34,7 @@ OBJECTS=	main.o\
 		MapViewer.o\
 		ARDriver.o\
 		MLDriver.o\
-		BookGame.o\
+		TextGame.o\
 		Tracker.o
 
 CALIB_OBJECTS=	GLWindow2.o\
