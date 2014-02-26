@@ -28,15 +28,15 @@ void ARDriver::Init()
     MakeFrameBuffer();
 
     Vector<6> vZeros = Zeros(6); 
-    SE3<> se3Identity = SE3<>(vZeros);
-    Game * mpGame = new EyeGame(se3Identity);
+    const SE3<> se3Identity = SE3<>(vZeros);
+    Game * mpGame = new TextGame(se3Identity);
     mvpGame.push_back(mpGame);
     mvpGame[0]->Init();
 };
 
 void ARDriver::AddGame(const SE3<> se3CanvasFromWorld)
 {
-    Game * mpGame = new EyeGame(se3CanvasFromWorld);
+    Game * mpGame = new TextGame(se3CanvasFromWorld);
     mvpGame.push_back(mpGame);
 }
 
@@ -85,10 +85,11 @@ void ARDriver::Render(Image<Rgb<byte> > &imFrame, SE3<> se3CfromW)
     glMultMatrix(mCamera.MakeUFBLinearFrustumMatrix(0.005, 100));
     glMultMatrix(se3CfromW);
 
-
     DrawFadingGrid();
     for (unsigned int i=0; i<mvpGame.size(); i++)
-        mvpGame[i]->Draw(se3CfromW.inverse().get_translation());
+    {
+        mvpGame[i]->Draw();
+    }
 
     glDisable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

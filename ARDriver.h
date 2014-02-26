@@ -18,8 +18,7 @@
 #include <cvd/image.h>
 #include <cvd/rgb.h>
 #include <cvd/byte.h>
-#include "Game.h"
-#include "EyeGame.h"
+#include "TextGame.h"
 
 using namespace std;
 using namespace CVD;
